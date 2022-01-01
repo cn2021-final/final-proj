@@ -1,0 +1,4 @@
+bin
+release/*
+.vscode
+/src/**/*.class
