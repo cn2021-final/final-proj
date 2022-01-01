@@ -58,6 +58,7 @@ U/R - unread / read
 2 [username] - chat with a friend
 3 [username] - add a friend
 4 [username] - delete a friend
+5 - quit
 ```
 
 ## list friends
@@ -74,7 +75,7 @@ U/R - unread / read
 
 ```
 -1 - not friends / user doesn't exist
-N - the number of available messages, N = max(10, len(history))
+N - the number of unread messages
 ```
 
 - if `N > 0`, write N lines of history
@@ -190,6 +191,92 @@ N - the number of available messages, N = len(U-messages)
 
 - go back to lobby
 
+## quit
+
+- close the connection
+
 # client spec
+
+## connection setup / login
+
+- create a socket
+
+- prompt for a string for the username
+
+- write to the server
+
+## lobby
+
+- prompt for a command
+
+```
+list
+chat [username]
+add [username]
+delete [username]
+quit
+```
+
+- if the command is invalid, go to the lobby
+
+- otherwise, send the command to the server. The format is specified in server spec
+
+## list
+
+- read the list of friends and print it out
+
+- go back to the lobby
+
+## chat
+
+- receive the number of unread messages
+
+- receive the messages
+
+- prompt for the command 
+
+```
+[text] - message
+/i [filename] - image
+/d [filename] - binary data
+/g [filename] - get image / binary data
+/l - more history
+/r - check for new messages
+/q - quit
+```
+
+### text message
+
+TODO
+
+### image / binary data
+
+TODO
+
+### get image / binary data
+
+TODO
+
+### more history
+
+TODO
+
+### new messages
+
+TODO
+
+### quit
+
+TODO
+
+## add
+
+TODO
+
+## delete
+
+TODO
+
+## quit
 
 TODO
