@@ -1,3 +1,15 @@
+# collaborating
+
+- before implementing a line of spec, mark it as [WORKING] and push it ASAP
+
+- after implementing, mark it as [DONE]
+
+## example
+
+- this feature is under construction [WORKING]
+
+- this feature is done [DONE]
+
 # server spec
 
 ## directories
@@ -27,11 +39,11 @@ U/R - unread / read
 
 ### connection setup
 
-- create a socket
+- create a socket [DONE]
 
 - create a directory for server: `server/`
 
-- create a new thread for every new client
+- create a new thread for every new client [DONE]
 
 ## login
 
