@@ -8,12 +8,12 @@ all:
 server:
 	cd src
 	javac Server.java
-	jar cfvm ../release/Server.jar server/Server.manifest Server.class server/*.class
+	jar cfvm ../release/Server.jar server/Server.manifest Server.class */*.class
 
 client:
 	cd src
 	javac Client.java
-	jar cfvm ../release/Client.jar client/Client.manifest Client.class client/*.class
+	jar cfvm ../release/Client.jar client/Client.manifest Client.class */*.class
 
 clean:
 	cd src
