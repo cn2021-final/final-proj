@@ -1,4 +1,4 @@
-package proj.client;
+package client;
 
 public class Trash {
     public Trash() {
