@@ -1,4 +1,4 @@
-package server;
+package proj.server;
 import java.net.Socket;
 
 public class ConnectionHandler implements Runnable {

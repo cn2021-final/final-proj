@@ -1,7 +1,8 @@
+package proj;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import server.ConnectionHandler;
+import proj.server.ConnectionHandler;
 
 public class Server {
     ServerSocket socket;
