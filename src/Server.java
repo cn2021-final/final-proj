@@ -1,12 +1,12 @@
-import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import server.ConnectionHandler;
+import server.UserManager;
 
 public class Server {
     ServerSocket socket;
-    File serverDirectory;
+    UserManager userManager;
     public static void main(String[] argv) {
         new Server(Integer.parseInt(argv[0])).run();
     }
@@ -20,15 +20,14 @@ public class Server {
             System.out.println(e);
             System.exit(1);
         }
-        serverDirectory = new File("server");
-        serverDirectory.mkdirs();
+        userManager = new UserManager();
     }
 
     private void run() {
         while(true) {
             try {
                 Socket s = socket.accept();
-                new ConnectionHandler(serverDirectory, s);
+                new ConnectionHandler(userManager, s);
             }
             catch(IOException e) {
                 System.out.print("failed to accept new connection: ");

@@ -1,20 +1,9 @@
-.ONESHELL:
-
-all:
-	make server
-	make client
-	make clean
-
-server:
-	cd src
-	javac Server.java
-	jar cfvm ../release/Server.jar server/Server.manifest Server.class server/*.class
-
-client:
-	cd src
-	javac Client.java
-	jar cfvm ../release/Client.jar client/Client.manifest Client.class client/*.class
+build:
+	cd src && \
+	javac Server.java -d ../bin && \
+	javac Client.java -d ../bin && \
+	cp server.sh ../server && \
+	cp client.sh ../client
 
 clean:
-	cd src
-	find . -name '*.class' -exec rm -rf {} +
+	rm -rf bin/* server client

@@ -6,9 +6,9 @@ import java.net.Socket;
 import client.Login;
 
 public class Client {
-    Socket socket;
-    DataInputStream input;
-    DataOutputStream output;
+    private Socket socket;
+    private DataInputStream input;
+    private DataOutputStream output;
     public static void main(String[] argv) {
         new Client(argv[0], Integer.parseInt(argv[1])).run();
     }
@@ -32,5 +32,6 @@ public class Client {
             socket.close();
         }
         catch(IOException e) {}
+        System.out.println("Bye!");
     }
 }

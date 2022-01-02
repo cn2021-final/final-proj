@@ -1,4 +1,6 @@
-bin
-release/*
+bin/*
 .vscode
 /src/**/*.class
+serverDir
+server
+client

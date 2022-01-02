@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Login {
-    DataInputStream input;
-    DataOutputStream output;
-    Scanner userInput;
+    private DataInputStream input;
+    private DataOutputStream output;
+    private Scanner userInput;
     public Login(DataInputStream input, DataOutputStream output) {
         this.input = input;
         this.output = output;
@@ -17,7 +17,9 @@ public class Login {
 
     public void run() throws IOException {
         System.out.print("username: ");
-        String username = userInput.next();
+        String username = userInput.nextLine();
         output.writeUTF(username);
+        new Lobby(input, output, userInput).run();
+        userInput.close();
     }
 }

@@ -48,11 +48,11 @@ U/R - unread / read
 ## login
 
 - listen for a UTF username, create a new directory if not exist [DONE]
-- proceed to lobby [WORKING]
+- proceed to lobby [DONE]
 
 ## lobby
 
-- listen for an integer, indicating the mode to perform [WORKING]
+- listen for an integer, indicating the mode to perform [DONE]
 
 ```
 1 - list friends
@@ -164,8 +164,8 @@ N - the number of available messages, N = len(U-messages)
 - write an integer as a response [WORKING]
 
 ```
-1 - success
-2 - already friends
+1 - previously not friends
+2 - were previously friends
 3 - user doesn't exist
 ```
 
@@ -175,14 +175,9 @@ N - the number of available messages, N = len(U-messages)
 
 - remove the friend's directory [WORKING]
 
-- remove the user's directory in the friend's friend list [WORKING]
+- remove the user's directory in the friend's directory [WORKING]
 
-- write an integer as a response [WORKING]
-
-```
-1 - success
-2 - not friends / user doesn't exist
-```
+- write an integer as a response. For the format, refer to *#add a friend* [WORKING]
 
 - go back to lobby [WORKING]
 
