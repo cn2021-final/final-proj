@@ -1,6 +1,5 @@
 bin/*
 .vscode
-/src/**/*.class
 serverDir
-server
-client
+./server
+./client

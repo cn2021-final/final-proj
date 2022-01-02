@@ -46,8 +46,9 @@ public class Lobby {
         output.writeUTF(userManager.getFriedns(username));
     }
 
-    private void chat() {
-        // TODO
+    private void chat() throws IOException {
+        String friend = input.readUTF();
+        userManager.makeChatroom(username, friend).run();
     }
 
     private void addFriend() throws IOException {

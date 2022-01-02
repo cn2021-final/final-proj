@@ -7,6 +7,8 @@ import common.FriendStatus;
 
 public class UserManager {
     private File rootDir = new File("serverDir");
+    private static final String histfile = "history";
+
     public UserManager() {
         rootDir.mkdirs();
     }
@@ -36,7 +38,7 @@ public class UserManager {
     private void friendInit(File userFriend) {
         try {
             userFriend.mkdir();
-            new File(userFriend, Chat.histfile).createNewFile();
+            new File(userFriend, histfile).createNewFile();
         }
         catch(IOException e) {
             System.out.print("Can't create file: ");
@@ -58,5 +60,14 @@ public class UserManager {
     private void deleteDir(File dir) {
         for(String content : dir.list()) new File(dir, content).delete();
         dir.delete();
+    }
+
+    public Chatroom makeChatroom(String username, String friend) {
+        File friendDir = new File(rootDir, friend);
+        if(!friendDir.exists()) return null;
+        File userFriend = new File(new File(rootDir, username), friend);
+        if(!userFriend.exists()) return null;
+        File friendFriend = new File(friendDir, username);
+        return new Chatroom(userFriend, friendFriend);
     }
 }

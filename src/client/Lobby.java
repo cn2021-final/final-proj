@@ -40,7 +40,9 @@ public class Lobby {
                 else System.out.format("Error: unrecognised command %s\n", command[0]);
             }
         }
-        catch(NoSuchElementException e) {}
+        catch(NoSuchElementException e) {
+            // user input returns EOF, ignored
+        }
     }
 
     private void list() throws IOException {

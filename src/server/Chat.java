@@ -9,14 +9,18 @@ import common.actions.ChatActions;
 public class Chat {
     private DataInputStream input;
     private DataOutputStream output;
-    public static final String histfile = "history";
+
+    public Chat(DataInputStream input, DataOutputStream output) {
+        this.input = input;
+        this.output = output;
+    }
 
     public void run() throws IOException {
-        // TODO
         while(true) {
             ChatActions action = ChatActions.translate(input.readInt());
             switch(action) {
                 case TEXT:
+                text();
                 break;
                 case IMAGE:
                 break;
@@ -32,5 +36,9 @@ public class Chat {
                 return;
             }
         }
+    }
+
+    private void text() throws IOException {
+         
     }
 }

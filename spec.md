@@ -70,22 +70,22 @@ U/R - unread / read
 
 ## chat with a friend
 
-- maintain an integer `lastRead` (or any name of choice), indicating the earliest chat history read by this session
+- maintain an integer `lastRead` (or any name of choice), indicating the earliest chat history read by this session [WORKING]
 
-- write an integer as a response
+- write an integer as a response [WORKING]
 
 ```
 -1 - not friends / user doesn't exist
 N - the number of unread messages
 ```
 
-- if `N > 0`, write N lines of history
+- if `N > 0`, write N lines of history [WORKING]
 
-- otherwise, go back to lobby
+- otherwise, go back to lobby [WORKING]
 
-- set `lastRead` to `len(history)-N`
+- set `lastRead` to `len(history)-N` [WORKING]
 
-- listen for an integer, indicating the operation
+- listen for an integer, indicating the operation [WORKING]
 
 ```
 1 - text message
@@ -99,9 +99,9 @@ N - the number of unread messages
 
 ### text message
 
-- listen for a string, and write to the chat history of the two parties. For format, refer to *#chat history format*
+- listen for a string, and write to the chat history of the two parties. For format, refer to *#chat history format* [WORKING]
 
-- listen for the next opreation
+- listen for the next opreation [WORKING]
 
 ### image / binary data
 
@@ -189,7 +189,7 @@ N - the number of available messages, N = len(U-messages)
 
 ## connection setup / login
 
-- create a socket
+- create a socket [DONE]
 
 - prompt for a string for the username [DONE]
 
@@ -197,7 +197,7 @@ N - the number of available messages, N = len(U-messages)
 
 ## lobby
 
-- prompt for a command
+- prompt for a command [DONE]
 
 ```
 list
@@ -207,9 +207,9 @@ delete [username]
 quit
 ```
 
-- if the command is invalid, go to the lobby
+- if the command is invalid, go back to the lobby [DONE]
 
-- otherwise, send the command to the server. The format is specified in server spec
+- otherwise, send the command to the server. The format is specified in server spec [DONE]
 
 ## list
 
@@ -219,11 +219,11 @@ quit
 
 ## chat
 
-- receive the number of unread messages
+- receive the number of unread messages [WORKING]
 
-- receive the messages
+- receive the messages [WORKING]
 
-- prompt for the command 
+- prompt for the command [WORKING]
 
 ```
 [text] - message
@@ -237,9 +237,9 @@ quit
 
 ### text message
 
-- send the text to the server. For the format, refer to *#text message* in server spec
+- send the text to the server. For the format, refer to *#text message* in server spec [WORKING]
 
-- proceed to check new messages
+- proceed to check new messages [WORKING]
 
 ### image / binary data
 
@@ -291,6 +291,6 @@ quit
 
 ## quit
 
-- close the connection with the server
+- close the connection with the server [DONE]
 
-- exit
+- exit [DONE]
