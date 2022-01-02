@@ -18,7 +18,7 @@
   
   - [friend name]
     
-    - chat history - hard linked to [friend name]/[username]/chat history
+    - chat history
     
     - shared files
 
@@ -88,8 +88,8 @@ N - the number of unread messages
 
 ```
 1 - text message
-2 - image
-3 - binary data
+2 [filesize] - image
+3 [filesize] - binary data
 4 - get image / binary data
 5 - more history
 6 - check for new messages
@@ -98,7 +98,7 @@ N - the number of unread messages
 
 ### text message
 
-- listen for a string, and write to the chat history. For format, refer to *#chat history format*
+- listen for a string, and write to the chat history of the two parties. For format, refer to *#chat history format*
 
 - listen for the next opreation
 
@@ -108,12 +108,6 @@ N - the number of unread messages
 
 - save the data, write to the chat history. For format, refer to *#chat history format*
 
-- write a line as a response
-
-```
-[filename]
-```
-
 - listen for the next operation
 
 ### get image / binary data
@@ -122,7 +116,7 @@ N - the number of unread messages
 
 ```
 -1 - file doesn't exist
-1 - file exists
+N - file exists, N = file size
 ```
 
 - if the file exists, write the file
@@ -164,7 +158,7 @@ N - the number of available messages, N = len(U-messages)
 
 - create a friend directory, and an empty chat history
 
-- create the same directory in the friend's directory, and hard-link the chat history
+- do the same in the friend's directory
 
 - write an integer as a response
 
@@ -247,36 +241,60 @@ quit
 
 ### text message
 
-TODO
+- send the text to the server. For the format, refer to *#text message* in server spec
+
+- proceed to check new messages
 
 ### image / binary data
 
-TODO
+- check if the file exists (relative path)
+
+- send the filesize to the server
+
+- dump the binary data to the server
+
+- proceed to check new messages
 
 ### get image / binary data
 
-TODO
+- receive the filesize
+
+- receive the data
+
+- proceed to prompt for new commands
 
 ### more history
 
-TODO
+- read the length of history
+
+- read the histories, then prompt for new commands
 
 ### new messages
 
-TODO
+- read the length of messages
+
+- receive the data, and print them out
+
+- proceed to prompt for new commands
 
 ### quit
 
-TODO
+- go back to lobby
 
 ## add
 
-TODO
+- receive the response from the server
+
+- go back to lobby
 
 ## delete
 
-TODO
+- receive the response from the server
+
+- go back to lobby
 
 ## quit
 
-TODO
+- close the connection with the server
+
+- exit
