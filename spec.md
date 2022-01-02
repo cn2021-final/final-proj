@@ -64,9 +64,9 @@ U/R - unread / read
 
 ## list friends
 
-- write a `\n`-separated list of usernames [WORKING]
+- write a `\n`-separated list of usernames [DONE]
 
-- go back to lobby [WORKING]
+- go back to lobby [DONE]
 
 ## chat with a friend
 
@@ -157,11 +157,11 @@ N - the number of available messages, N = len(U-messages)
 
 ## add a friend
 
-- create a friend directory, and an empty chat history [WORKING]
+- create a friend directory, and an empty chat history [DONE]
 
-- do the same in the friend's directory [WORKING]
+- do the same in the friend's directory [DONE]
 
-- write an integer as a response [WORKING]
+- write an integer as a response [DONE]
 
 ```
 1 - previously not friends
@@ -173,13 +173,13 @@ N - the number of available messages, N = len(U-messages)
 
 ## delete a friend
 
-- remove the friend's directory [WORKING]
+- remove the friend's directory [DONE]
 
-- remove the user's directory in the friend's directory [WORKING]
+- remove the user's directory in the friend's directory [DONE]
 
-- write an integer as a response. For the format, refer to *#add a friend* [WORKING]
+- write an integer as a response. For the format, refer to *#add a friend* [DONE]
 
-- go back to lobby [WORKING]
+- go back to lobby [DONE]
 
 ## quit
 
@@ -213,9 +213,9 @@ quit
 
 ## list
 
-- read the list of friends and print it out [WORKING]
+- read the list of friends and print it out [DONE]
 
-- go back to the lobby [WORKING]
+- go back to the lobby [DONE]
 
 ## chat
 
@@ -279,15 +279,15 @@ quit
 
 ## add
 
-- receive the response from the server [WORKING]
+- receive the response from the server [DONE]
 
-- go back to lobby [WORKING]
+- go back to lobby [DONE]
 
 ## delete
 
-- receive the response from the server [WORKING]
+- receive the response from the server [DONE]
 
-- go back to lobby [WORKING]
+- go back to lobby [DONE]
 
 ## quit
 

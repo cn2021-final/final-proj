@@ -36,7 +36,7 @@ public class Lobby {
                 else if(command[0].equals("chat") && command.length == 2) chat(command[1]);
                 else if(command[0].equals("add") && command.length == 2) add(command[1]);
                 else if(command[0].equals("delete") && command.length == 2) delete(command[1]);
-                else if(command[0].equals("quit") && command.length == 2) return;
+                else if(command[0].equals("quit") && command.length == 1) return;
                 else System.out.format("Error: unrecognised command %s\n", command[0]);
             }
         }
