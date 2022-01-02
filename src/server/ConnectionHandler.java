@@ -1,21 +1,25 @@
 package server;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 
 public class ConnectionHandler implements Runnable {
     DataInputStream input;
     DataOutputStream output;
+    Socket socket;
+    File serverDirectory;
 
-    public ConnectionHandler(Socket s) {
+    public ConnectionHandler(File directory, Socket s) {
+        serverDirectory = directory;
+        socket = s;
         try {
-            input = new DataInputStream(s.getInputStream());
-            output = new DataOutputStream(s.getOutputStream());
+            input = new DataInputStream(socket.getInputStream());
+            output = new DataOutputStream(socket.getOutputStream());
         }
         catch(IOException e) {
-            // IDC, just disconnect
-            try { s.close(); } catch(Exception ignore) {}
+            // IDC
             return;     
         }
         new Thread(this).start();
@@ -23,7 +27,11 @@ public class ConnectionHandler implements Runnable {
 
     @Override
     public void run() {
-        // TODO: implement the spec
+        try {
+            new Login(input, output, serverDirectory).run();
+            socket.close();
+        }
+        catch(IOException e) {}
     }
 
 }

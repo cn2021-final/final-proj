@@ -41,17 +41,18 @@ U/R - unread / read
 
 - create a socket [DONE]
 
-- create a directory for server: `server/` [WORKING]
+- create a directory for server: `server/` [DONE]
 
 - create a new thread for every new client [DONE]
 
 ## login
 
-- listen for a UTF username, create a new directory if not exist [WORKING]
+- listen for a UTF username, create a new directory if not exist [DONE]
+- proceed to lobby [WORKING]
 
 ## lobby
 
-- listen for an integer, indicating the mode to perform
+- listen for an integer, indicating the mode to perform [WORKING]
 
 ```
 1 - list friends
@@ -63,9 +64,9 @@ U/R - unread / read
 
 ## list friends
 
-- write a `\n`-separated list of usernames
+- write a `\n`-separated list of usernames [WORKING]
 
-- go back to lobby
+- go back to lobby [WORKING]
 
 ## chat with a friend
 
@@ -156,11 +157,11 @@ N - the number of available messages, N = len(U-messages)
 
 ## add a friend
 
-- create a friend directory, and an empty chat history
+- create a friend directory, and an empty chat history [WORKING]
 
-- do the same in the friend's directory
+- do the same in the friend's directory [WORKING]
 
-- write an integer as a response
+- write an integer as a response [WORKING]
 
 ```
 1 - success
@@ -172,18 +173,18 @@ N - the number of available messages, N = len(U-messages)
 
 ## delete a friend
 
-- remove the friend's directory
+- remove the friend's directory [WORKING]
 
-- remove the user's directory in the friend's friend list
+- remove the user's directory in the friend's friend list [WORKING]
 
-- write an integer as a response
+- write an integer as a response [WORKING]
 
 ```
 1 - success
 2 - not friends / user doesn't exist
 ```
 
-- go back to lobby
+- go back to lobby [WORKING]
 
 ## quit
 
@@ -193,11 +194,11 @@ N - the number of available messages, N = len(U-messages)
 
 ## connection setup / login
 
-- create a socket [WORKING]
+- create a socket
 
-- prompt for a string for the username [WORKING]
+- prompt for a string for the username [DONE]
 
-- write to the server [WORKING]
+- write to the server [DONE]
 
 ## lobby
 
@@ -217,9 +218,9 @@ quit
 
 ## list
 
-- read the list of friends and print it out
+- read the list of friends and print it out [WORKING]
 
-- go back to the lobby
+- go back to the lobby [WORKING]
 
 ## chat
 
@@ -283,15 +284,15 @@ quit
 
 ## add
 
-- receive the response from the server
+- receive the response from the server [WORKING]
 
-- go back to lobby
+- go back to lobby [WORKING]
 
 ## delete
 
-- receive the response from the server
+- receive the response from the server [WORKING]
 
-- go back to lobby
+- go back to lobby [WORKING]
 
 ## quit
 
