@@ -50,8 +50,17 @@ public class Lobby {
         System.out.print(input.readUTF());
     }
 
-    private void chat(String friend) {
-        // TODO
+    private void chat(String friend) throws IOException {
+        output.writeInt(LobbyActions.CHAT.code);
+        output.writeUTF(friend);
+        switch(FriendStatus.translate(input.readInt())) {
+            case ISFRIEND:
+            break;
+            default:
+            System.out.format("%s is not your friend or doesn't exist\n", friend);
+            return;
+        }
+        new Chat(input, output, userInput).run();
     }
 
     private void add(String friend) throws IOException {

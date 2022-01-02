@@ -48,7 +48,13 @@ public class Lobby {
 
     private void chat() throws IOException {
         String friend = input.readUTF();
-        userManager.makeChatroom(username, friend).run();
+        Chatroom chatroom = userManager.makeChatroom(username, friend);
+        if(chatroom == null) {
+            output.writeInt(FriendStatus.NOTFRIEND.code);
+            return;
+        }
+        output.writeInt(FriendStatus.ISFRIEND.code);
+        new Chat(input, output, chatroom).run();
     }
 
     private void addFriend() throws IOException {

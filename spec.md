@@ -24,15 +24,16 @@
 
 ## chat history format
 
-- a text file
+- a binary file, handled with java RandomAccessFile class
+
+- beginning: long integer, offset of the last unread message. If it's set to the end of the file, every messages are read.
 
 - earliest history first
 
 ```
-[U/R] T [username] [content] - normal text
-[U/R] I [username] [filename] - image file
-[U/R] B [username] [filename] - binary data
-U/R - unread / read
+1 [username] [content] - normal text
+2 [username] [filename] - image file
+3 [username] [filename] - binary data
 ```
 
 ## implementation details
@@ -72,20 +73,18 @@ U/R - unread / read
 
 - maintain an integer `lastRead` (or any name of choice), indicating the earliest chat history read by this session [WORKING]
 
-- write an integer as a response [WORKING]
+- write an integer as a response [DONE]
 
 ```
--1 - not friends / user doesn't exist
-N - the number of unread messages
+1 - not friends / user doesn't exist
+2 - success
 ```
 
-- if `N > 0`, write N lines of history [WORKING]
+- if `N = 2`, proceed [DONE]
 
-- otherwise, go back to lobby [WORKING]
+- otherwise, go back to lobby [DONE]
 
-- set `lastRead` to `len(history)-N` [WORKING]
-
-- listen for an integer, indicating the operation [WORKING]
+- listen for an integer, indicating the operation [DONE]
 
 ```
 1 - text message
@@ -99,9 +98,9 @@ N - the number of unread messages
 
 ### text message
 
-- listen for a string, and write to the chat history of the two parties. For format, refer to *#chat history format* [WORKING]
+- listen for a string, and write to the chat history of the two parties. For format, refer to *#chat history format* [DONE]
 
-- listen for the next opreation [WORKING]
+- listen for the next opreation [DONE]
 
 ### image / binary data
 
@@ -219,11 +218,9 @@ quit
 
 ## chat
 
-- receive the number of unread messages [WORKING]
+- fetch new messages [DONE]
 
-- receive the messages [WORKING]
-
-- prompt for the command [WORKING]
+- prompt for the command [DONE]
 
 ```
 [text] - message
@@ -237,9 +234,9 @@ quit
 
 ### text message
 
-- send the text to the server. For the format, refer to *#text message* in server spec [WORKING]
+- send the text to the server. For the format, refer to *#text message* in server spec [DONE]
 
-- proceed to check new messages [WORKING]
+- proceed to check new messages [DONE]
 
 ### image / binary data
 

@@ -1,13 +1,14 @@
 package server;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 
 import common.FriendStatus;
 
 public class UserManager {
     private File rootDir = new File("serverDir");
-    private static final String histfile = "history";
 
     public UserManager() {
         rootDir.mkdirs();
@@ -38,7 +39,13 @@ public class UserManager {
     private void friendInit(File userFriend) {
         try {
             userFriend.mkdir();
-            new File(userFriend, histfile).createNewFile();
+            File log = new File(userFriend, Chatroom.histfile);
+            log.createNewFile();
+            RandomAccessFile content = new RandomAccessFile(log, "rw");
+            content.writeLong(0);
+            content.seek(0);
+            content.writeLong(content.length());
+            content.close();
         }
         catch(IOException e) {
             System.out.print("Can't create file: ");
@@ -68,6 +75,11 @@ public class UserManager {
         File userFriend = new File(new File(rootDir, username), friend);
         if(!userFriend.exists()) return null;
         File friendFriend = new File(friendDir, username);
-        return new Chatroom(userFriend, friendFriend);
+        try {
+            return new Chatroom(username, userFriend, friendFriend);
+        }
+        catch(FileNotFoundException e) {
+            return null;
+        }
     }
 }
