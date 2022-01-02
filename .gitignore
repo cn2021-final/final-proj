@@ -1,5 +1,5 @@
 bin/*
 .vscode
 serverDir
-./server
-./client
+server
+client
