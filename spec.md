@@ -41,13 +41,13 @@ U/R - unread / read
 
 - create a socket [DONE]
 
-- create a directory for server: `server/`
+- create a directory for server: `server/` [WORKING]
 
 - create a new thread for every new client [DONE]
 
 ## login
 
-- listen for a UTF username, create a new directory if not exist
+- listen for a UTF username, create a new directory if not exist [WORKING]
 
 ## lobby
 
@@ -193,11 +193,11 @@ N - the number of available messages, N = len(U-messages)
 
 ## connection setup / login
 
-- create a socket
+- create a socket [WORKING]
 
-- prompt for a string for the username
+- prompt for a string for the username [WORKING]
 
-- write to the server
+- write to the server [WORKING]
 
 ## lobby
 
