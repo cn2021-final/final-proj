@@ -334,7 +334,7 @@ quit
 
 - input: sender username, receiver username
 
-- output: the last max(10, len(available history)) unread history
+- output: all unread histories
 
 - update the range of read history
 
