@@ -291,3 +291,109 @@ quit
 - close the connection with the server [DONE]
 
 - exit [DONE]
+
+# web server
+
+## client library
+
+### lobby
+
+#### list friends
+
+- input: username
+
+- output: a `\n`-separated list of usernames
+
+#### add
+
+- input: adder username, added username
+
+- output: 1 (previously not friends), 2 (were friends), 3 (user doesn't exist)
+
+#### delete
+
+- input: deleter username, deleted username
+
+- output: refer to add
+
+### chat with a friend
+
+#### text message
+
+- input: sender username, receiver username, message
+
+- output: none
+
+#### image / binary data
+
+- input: sender username, receiver username, filename
+
+- output: none
+
+#### read history
+
+- input: sender username, receiver username
+
+- output: the last max(10, len(available history)) unread history
+
+- update the range of read history
+
+#### more history
+
+- input: sender username, receiver username
+
+- output: max(10, len(available unread history before first read history)) lines of unread history right before the first read history
+
+- update the range of read history
+
+#### get image / binary data
+
+- input: sender username, receiver username, filename
+
+- output: the address of the file on the server, or some error if the upload is not done or not found
+
+## interface
+
+### lobby
+
+- list all the friends, click on a name to select further operations
+
+#### delete
+
+- delete the selected friend and refresh the friends list
+
+#### add
+
+- input a username, and add it if it exists and isn't previously a friend
+
+#### chat
+
+- go to the chats page
+
+### chatting
+
+#### text
+
+- input text in a box and press the button to send
+
+- reload the latest history
+
+#### image / binary data
+
+- click a button, select the file to upload
+
+- reload the latest history
+
+#### new messages
+
+- reload the latest history
+
+#### more history
+
+- found when a user scrolls up the chat history
+
+- load unloaded history right before the first loaded history
+
+#### back to lobby
+
+- go back to the lobby page
