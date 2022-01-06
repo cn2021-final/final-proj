@@ -6,8 +6,12 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 import common.chat.ChatLog;
 import common.chat.LogType;
@@ -18,6 +22,8 @@ public class Chatroom {
     private final RandomAccessFile userLog, friendLog;
     private final FileChannel sessionLock;
     public static final String histfile = "history";
+    private static final Random random = new Random();
+    private static final String charset = "abcdefghijklmnopqrstuvwxyz";
 
     public Chatroom(String username, File userDir, File friendDir) throws FileNotFoundException {
         this.username = username;
@@ -61,6 +67,42 @@ public class Chatroom {
         updateLog(friendLog, log);
 
         unlockSession(lock);
+    }
+
+    public File createFile(String suffix) {
+        FileLock lock = lockSession();
+        if(lock == null) return null;
+
+        File file = generateFile(suffix);
+
+        unlockSession(lock);
+        return file;
+    }
+
+    public void sendBinary(String filename) {
+        FileLock lock = lockSession();
+        if(lock == null) return;
+
+        ChatLog log = new ChatLog(LogType.BINARY, username, filename);
+        updateLog(userLog, log);
+        updateLog(friendLog, log);
+
+        unlockSession(lock);
+    }
+
+    public void sendImage(String filename) {
+        FileLock lock = lockSession();
+        if(lock == null) return;
+
+        ChatLog log = new ChatLog(LogType.IMAGE, username, filename);
+        updateLog(userLog, log);
+        updateLog(friendLog, log);
+
+        unlockSession(lock);
+    }
+
+    public File openFile(String filename) {
+        return new File(userDir, filename);
     }
 
     private FileLock lockSession() {
@@ -115,5 +157,22 @@ public class Chatroom {
             file.writeUTF(log.content);
         }
         catch(IOException e) {}
+    }
+
+    private File generateFile(String suffix) {
+        try {
+            while(true) {
+                String filename = "";
+                for(int i = 0; i < 7; ++i) filename += charset.charAt(random.nextInt(charset.length()));
+                filename += suffix;
+                File file = new File(userDir, filename);
+                if(!file.exists()) {
+                    file.createNewFile();
+                    Files.createLink(new File(friendDir, filename).toPath(), file.toPath());
+                    return file;
+                }
+            }
+        }
+        catch(IOException e) { return null; }
     }
 }

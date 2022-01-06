@@ -88,8 +88,8 @@
 
 ```
 1 - text message
-2 [filesize] - image
-3 [filesize] - binary data
+2 [suffix] [filesize] - image
+3 [suffix] [filesize] - binary data
 4 - get image / binary data
 5 - more history
 6 - check for new messages
@@ -104,22 +104,22 @@
 
 ### image / binary data
 
-- generate a random string for the filename, preserve the extension (if any), make sure the filename doesn't exist, etc
+- generate a random string for the filename, preserve the extension (if any), make sure the filename doesn't exist, etc [DONE]
 
-- save the data, write to the chat history. For format, refer to *#chat history format*
+- save the data, write to the chat history. For format, refer to *#chat history format* [DONE]
 
-- listen for the next operation
+- listen for the next operation [DONE]
 
 ### get image / binary data
 
-- write an integer as a response
+- write an integer as a response [DONE]
 
 ```
 -1 - file doesn't exist
 N - file exists, N = file size
 ```
 
-- if the file exists, write the file
+- if the file exists, write the file [DONE]
 
 ### more history
 
@@ -138,21 +138,21 @@ N - the number of available messages, N = max(10, len(available history))
 
 ### check for new messages
 
-- write an integer as a response. for the definition of U, refer to *#chat history format*
+- write an integer as a response. for the definition of U, refer to *#chat history format* [DONE]
 
 ```
 N - the number of available messages, N = len(U-messages)
 ```
 
-- set `lastRead` to `len(history)`, even if `N = 0`
+- set `lastRead` to `len(history)`, even if `N = 0` [DONE]
 
-- if `N > 0`, write N lines of history
+- if `N > 0`, write N lines of history [DONE]
 
-- listen for the next operation
+- listen for the next operation [DONE]
 
 ### exit
 
-- go back to lobby
+- go back to lobby [DONE]
 
 ## add a friend
 
@@ -182,7 +182,7 @@ N - the number of available messages, N = len(U-messages)
 
 ## quit
 
-- close the connection
+- close the connection [DONE]
 
 # client spec
 
@@ -240,21 +240,23 @@ quit
 
 ### image / binary data
 
-- check if the file exists (relative path)
+- check if the file exists (relative path) [DONE]
 
-- send the filesize to the server
+- send the suffix to the server. For files without a suffix, send an empty string. [DONE]
 
-- dump the binary data to the server
+- send the filesize to the server [DONE]
 
-- proceed to check new messages
+- dump the binary data to the server [DONE]
+
+- proceed to check new messages [DONE]
 
 ### get image / binary data
 
-- receive the filesize
+- receive the filesize [DONE]
 
-- receive the data
+- receive the data [DONE]
 
-- proceed to prompt for new commands
+- proceed to prompt for new commands [DONE]
 
 ### more history
 
@@ -264,15 +266,15 @@ quit
 
 ### new messages
 
-- read the length of messages
+- read the length of messages [DONE]
 
-- receive the data, and print them out
+- receive the data, and print them out [DONE]
 
-- proceed to prompt for new commands
+- proceed to prompt for new commands [DONE]
 
 ### quit
 
-- go back to lobby
+- go back to lobby [DONE]
 
 ## add
 

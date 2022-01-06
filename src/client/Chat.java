@@ -2,8 +2,14 @@ package client;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import common.actions.ChatActions;
 import common.chat.ChatLog;
@@ -37,7 +43,7 @@ public class Chat {
             if(content.charAt(0) == '/') {
                 String[] command = content.split(" ");
                 if(command[0].equals("/i") && command.length == 2) image(command[1]);
-                else if(command[0].equals("/d") && command.length == 2) data(command[1]);
+                else if(command[0].equals("/d") && command.length == 2) binary(command[1]);
                 else if(command[0].equals("/g") && command.length == 2) get(command[1]);
                 else if(command[0].equals("/l") && command.length == 1) history();
                 else if(command[0].equals("/r") && command.length == 1) getnew();
@@ -51,16 +57,54 @@ public class Chat {
         }
     }
 
-    private void image(String filename) {
-
+    private void image(String filename) throws IOException {
+        if(!fileReady(filename)) return;
+        output.writeInt(ChatActions.IMAGE.code);
+        sendData(filename);
+        getnew();
     }
 
-    private void data(String filename) {
-
+    private void binary(String filename) throws IOException {
+        if(!fileReady(filename)) return;
+        output.writeInt(ChatActions.BINARY.code);
+        sendData(filename);
+        getnew();
     }
 
-    private void get(String filename) {
+    private void sendData(String filename) throws IOException {
+        output.writeUTF(getSuffix(filename));
+        RandomAccessFile file = new RandomAccessFile(new File(Paths.get(filename).toString()), "rw");
+        long size = file.length(), progress = 0;
+        output.writeLong(size);
+        byte[] buf = new byte[4096];
+        while(progress < size) {
+            if(size - progress < 4096) buf = new byte[(int)(size - progress)];
+            file.read(buf);
+            output.write(buf);
+            progress += 4096;
+        }
+        file.close();
+    }
 
+    private void get(String filename) throws IOException {
+        output.writeInt(ChatActions.GETDATA.code);
+        output.writeUTF(filename);
+        long size = input.readLong(), progress = 0;
+        if(size < 0) {
+            badFile(filename);
+            return;
+        }
+        File f = new File(Paths.get(filename).toString());
+        f.createNewFile();
+        RandomAccessFile file = new RandomAccessFile(f, "rw");
+        byte[] buf = new byte[4096];
+        while(progress < size) {
+            if(size - progress < 4096) buf = new byte[(int)(size - progress)];
+            input.read(buf);
+            file.write(buf);
+            progress += 4096;
+        }
+        file.close();
     }
 
     private void history() {
@@ -97,8 +141,27 @@ public class Chat {
         }
         System.out.println(log.content);
     }
+    
+    private boolean fileReady(String filename) {
+        if(new File(Paths.get(filename).toString()).canRead()) return true;
+        badFile(filename);
+        return false;
+    }
+
+    private void badFile(String filename) {
+        System.out.format("File %s can't be read.\n", filename);
+    }
 
     private void quit() throws IOException {
         output.writeInt(ChatActions.EXIT.code);
     }
+
+    private static String getSuffix(String filename) {
+        LinkedList<String> chunks = new LinkedList<>(Arrays.asList(filename.split("\\.")));
+        chunks.pop();
+        String suffix = chunks.stream().collect(Collectors.joining("."));
+        if(suffix.length() > 0) return '.' + suffix;
+        return suffix;
+    }
+
 }
