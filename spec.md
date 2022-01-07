@@ -354,7 +354,7 @@ quit
 
 - output: the address of the file on the server, or some error if the upload is not done or not found
 
-## interface
+## interface [WORKING]
 
 ### lobby
 
