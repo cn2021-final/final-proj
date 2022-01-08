@@ -304,7 +304,7 @@ quit
 
 - input: username
 
-- output: a `\n`-separated list of usernames
+- output: a list of usernames
 
 #### add
 
@@ -356,23 +356,90 @@ quit
 
 ## interface [WORKING]
 
+### login
+
+- Accept a username of length 1~32 and use a get request to request the corresponding lobby page
+
 ### lobby
 
-- list all the friends, click on a name to select further operations
+- list all the friends, click the buttons next to a name to select further operations
+
+#### friend list response format
+
+```json
+{
+    "list": [
+        "<friend-username1>",
+        "<friend-username2>",
+        ...
+    ]
+}
+```
+
+#### renew
+
+- retrieve the latest friend list
+
+- should send a get request indicating the deleter and the deleted, and update the list according to the response
+
+- request: `./renew`
+
+```json
+{
+    "sender": "<sender username>",
+    "receiver": "<receiver username>",
+    "operation": 0
+}
+```
 
 #### delete
 
-- delete the selected friend and refresh the friends list
+- delete the selected friend and refresh the friends list according the response
+- should send a post request indicating the deleter and the deleted
+- request: `./delete`
+
+```json
+{
+    "sender": "<sender username>",
+    "receiver": "<receiver username>",
+    "operation": 1
+}
+```
 
 #### add
 
-- input a username, and add it if it exists and isn't previously a friend
+- input a username, update the server side friend list, and refresh the friends list according to the response
+- should send a post request indicating the adder and the added
+- request: `./add`
+
+```json
+{
+    "sender": "<sender username>",
+    "receiver": "<receiver username>",
+    "operation": 2
+}
+```
 
 #### chat
 
-- go to the chats page
+- go to the chats page by requesting the chat page of the user and the other user
+- Should first refresh, and check if the other user is still a friend. Then, send a get request indicating the current user and the chatting partner if they are a friend of the current user. This request gets the chatting page.
 
 ### chatting
+
+#### chat history response format
+
+```json
+{    
+    "history": [
+        [1, sender, content],
+        [2, sender, image address on server],
+        [3, sender, file address on server],
+        [2, sender, image address on server],
+        ...
+    ]
+}
+```
 
 #### text
 
@@ -380,15 +447,47 @@ quit
 
 - reload the latest history
 
+- should send a post request indicating the current user, the chatting friend, the message type (1), and the message content
+
+- request: `./send-text`
+
+- ```json
+  {
+      "sender": "<sender username>",
+      "receiver": "<receiver username>",
+      "type": 1,
+      "content": "<message content>"
+  }
+  ```
+
 #### image / binary data
 
 - click a button, select the file to upload
 
 - reload the latest history
 
+- should send a post request indicating the current user, the chatting friend, the message type (2/3), and the file
+
+- request: `./send-image`, `./send-file`
+  
+  - Use the method mentioned in [Using FormData Objects - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects)
+
 #### new messages
 
 - reload the latest history
+
+- should send a get request indicating the current user and the chatting friend
+
+- parse the response to get the chat history, or error message if the chatting partner is not a friend
+
+- request: `./refresh`
+
+- ```json
+  {
+      "sender": "<sender username>",
+      "receiver": "<receiver username>"
+  }
+  ```
 
 #### more history
 
@@ -396,6 +495,20 @@ quit
 
 - load unloaded history right before the first loaded history
 
+- should send a get request indicating the current user and the chatting friend
+
+- parse the response to get the chat history, or error message if the chatting partner is not a friend
+
+- request: `./more-history`
+
+- ```json
+  {
+      "sender": "<sender username>",
+      "receiver": "<receiver username>"
+  }
+  ```
+
 #### back to lobby
 
 - go back to the lobby page
+- should send a get request indicating the current user then gets the lobby page
