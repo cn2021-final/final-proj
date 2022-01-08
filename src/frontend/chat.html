@@ -1,0 +1,34 @@
+<!DOTYPE html>
+<html lang='zh-tw'>
+<head>
+  <meta charset='utf-8'>
+  <title>Chat with JGR</title>
+</head>
+<body>
+  <h1>Chat with JGR</h1>
+  <p><input type='button' value='back to lobby' id='lobby'></p>
+  <p><input type='button' value='load more' id='load-more'>    </p>
+  <div id='before-chat'></div>
+  <input type='text' hidden id='username' value='titusjgr'>
+  <!-- chat action bar starts -->
+  <p>
+  <input type='text' id='text-message'>
+  <input type='button' value='send' id='send-text'>
+  <input type='button' value='refresh' id='refresh'>
+  </p>
+  <!-- chat action bar ends -->
+  <!-- send image starts -->
+  <p>
+  <input type='file' accept='image/png, image/jpeg'>
+  <input type='button' value='send image' id='send-image'>
+  </p>
+  <!-- send image ends -->
+  <!-- send binary starts -->
+  <p>
+  <input type='file'>
+  <input type='button' value='send file' id='send-file'>
+  </p>
+  <!-- send binary ends -->
+  <script type='module' src='./chat.js'></script>
+</body>
+
