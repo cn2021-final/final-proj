@@ -15,7 +15,7 @@ public class HTTPRequest {
     public final Float version;
     public final RequestType type;
 
-    public HTTPRequest(RequestType type, String location, Float version) {
+    protected HTTPRequest(RequestType type, String location, Float version) {
         this.location = location;
         this.version = version;
         this.type = type;
@@ -39,7 +39,6 @@ public class HTTPRequest {
             }
         }
         catch(IndexOutOfBoundsException | NoSuchElementException e) {}
-        scanner.close();
         return request;
     }
 }
