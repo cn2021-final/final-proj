@@ -19,10 +19,12 @@ public class HTTPResponse {
     public void WriteResponse(DataOutputStream output) throws IOException {
         output.writeBytes(generateHeader());
         byte[] buf = new byte[4096];
-        while(data.available() > 0) {
-            if(data.available() < 4096) buf = new byte[data.available()];
+        long progress = 0;
+        while(progress < contentLength) {
+            if(contentLength - progress < 4096) buf = new byte[(int)(contentLength + progress)];
             data.read(buf);
             output.write(buf);
+            progress += 4096;
         }
     }
 

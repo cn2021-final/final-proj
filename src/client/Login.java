@@ -6,15 +6,23 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Login {
-    private DataInputStream input;
-    private DataOutputStream output;
-    private Scanner userInput;
+    private final DataInputStream input;
+    private final DataOutputStream output;
+    private final Scanner userInput;
+    public Login(DataInputStream input, DataOutputStream output, Scanner userInput) {
+        this.input = input;
+        this.output = output;
+        this.userInput = userInput;
+    }
+
+    // for non-interactive purpose only!
     public Login(DataInputStream input, DataOutputStream output) {
         this.input = input;
         this.output = output;
-        userInput = new Scanner(System.in);
+        this.userInput = null;
     }
 
+    // for interactive purpose only!
     public void run() throws IOException {
         System.out.print("username: ");
         String username = userInput.nextLine();

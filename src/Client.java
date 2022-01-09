@@ -2,6 +2,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Scanner;
 
 import client.Login;
 
@@ -28,7 +29,7 @@ public class Client {
 
     private void run() {
         try {
-            new Login(input, output).run();
+            new Login(input, output, new Scanner(System.in)).run();
             socket.close();
         }
         catch(IOException e) {}

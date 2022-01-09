@@ -1,10 +1,7 @@
 package web.http;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.NoSuchElementException;
-import java.util.Scanner;
 
 import web.http.request.BadRequest;
 import web.http.request.GetRequest;
