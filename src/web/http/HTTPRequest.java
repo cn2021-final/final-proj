@@ -1,5 +1,6 @@
 package web.http;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.NoSuchElementException;
@@ -21,11 +22,10 @@ public class HTTPRequest {
         this.type = type;
     }
 
-    public static HTTPRequest parseRequest(DataInputStream input) throws IOException {
-        Scanner scanner = new Scanner(input);
+    public static HTTPRequest parseRequest(HybridInputStream input) throws IOException {
         HTTPRequest request = new BadRequest();
         try {
-            String[] line = scanner.nextLine().split(" ");
+            String[] line = input.getLine().split(" ");
             String type = line[0];
             String location = line[1];
             Float version = Float.parseFloat(line[2].split("/")[1]);
@@ -34,7 +34,7 @@ public class HTTPRequest {
                 request = new GetRequest(location, version);
                 break;
                 case "POST":
-                request = new PostRequest(location, version, scanner);
+                request = new PostRequest(location, version, input);
                 break;
             }
         }

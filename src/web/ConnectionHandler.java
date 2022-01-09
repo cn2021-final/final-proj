@@ -1,13 +1,13 @@
 package web;
 
-import java.io.DataInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
 import web.http.HTTPRequest;
-import web.http.HTTPResponse;
-import web.http.response.BadResponse;
+import web.http.HybridInputStream;
+import web.http.request.PostRequest;
 import web.http.response.NotFoundResponse;
 
 public class ConnectionHandler implements Runnable {
@@ -20,9 +20,13 @@ public class ConnectionHandler implements Runnable {
     @Override
     public void run() {
         try {
+            // TODO: this is an example of connection handling
             System.err.println("new connection");
-            HTTPRequest request = HTTPRequest.parseRequest(new DataInputStream(socket.getInputStream()));
-            // System.err.println(request.getClass());
+            HybridInputStream input = new HybridInputStream(socket.getInputStream());
+            PostRequest request = (PostRequest) HTTPRequest.parseRequest(input);
+            ByteArrayOutputStream buffer =  new ByteArrayOutputStream();
+            request.readData(buffer);
+            System.err.println(request.getClass());
             new NotFoundResponse().WriteResponse(new DataOutputStream(socket.getOutputStream()));
             socket.close();
         }
