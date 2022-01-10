@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
+import java.util.Stack;
 
 import common.chat.ChatLog;
 import common.chat.LogType;
@@ -41,16 +42,29 @@ public class Chatroom {
 
         while(true) {
             try {
-               LogType type =  LogType.translate(userLog.readInt());
-               String user = userLog.readUTF();
-               String content = userLog.readUTF();
-               logs.push(new ChatLog(type, user, content));
+                userLog.readLong(); // offset of last message, usless
+                LogType type =  LogType.translate(userLog.readInt());
+                String user = userLog.readUTF();
+                String content = userLog.readUTF();
+                logs.push(new ChatLog(type, user, content));
             }
             catch(IOException e) {
                 break;
             }
         }
         finishReading();
+
+        unlockSession(lock);
+        return logs;
+    }
+
+    public Stack<ChatLog> getHistory(int skip, int count) {
+        Stack<ChatLog> logs = new Stack<>();
+        FileLock lock = lockSession();
+        if(lock == null) return logs;
+        seekUntilRead(userLog);
+
+        // TODO
 
         unlockSession(lock);
         return logs;
@@ -148,13 +162,25 @@ public class Chatroom {
     }
 
     private void updateLog(RandomAccessFile file, ChatLog log) {
-        seekUntilEnd(file);
         try {
+            long lastMessage = updateLastOffset(file);
+            seekUntilEnd(file);
+            file.writeLong(lastMessage);
             file.writeInt(log.type.code);
             file.writeUTF(log.user);
             file.writeUTF(log.content);
         }
         catch(IOException e) {}
+    }
+
+    long updateLastOffset(RandomAccessFile file) throws IOException {
+        file.seek(0);
+        file.readLong(); // last read
+        long lastMessage = file.readLong();
+        file.seek(0);
+        file.readLong(); // last read
+        file.writeLong(file.length());
+        return lastMessage;
     }
 
     private File generateFile(String suffix) {

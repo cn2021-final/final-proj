@@ -26,15 +26,21 @@
 
 - a binary file, handled with java RandomAccessFile class
 
-- beginning: long integer, offset of the last unread message. If it's set to the end of the file, every messages are read.
+- beginning: 
+  
+  - long integer, offset of the last unread message. If it's set to the end of the file, every messages are read.
+  
+  - long integer, offset of the last message
 
 - earliest history first
 
 ```
-1 [username] [content] - normal text
-2 [username] [filename] - image file
-3 [username] [filename] - binary data
+[offset] 1 [username] [content] - normal text
+[offset] 2 [username] [filename] - image file
+[offset] 3 [username] [filename] - binary data
 ```
+
+- offset: offset of the last message, long integer
 
 ## implementation details
 
@@ -260,9 +266,9 @@ quit
 
 ### more history
 
-- read the length of history
+- read the length of history [WORKING]
 
-- read the histories, then prompt for new commands
+- read the histories, then prompt for new commands [WORKING]
 
 ### new messages
 
@@ -300,19 +306,19 @@ quit
 
 ### lobby
 
-#### list friends
+#### list friends [WORKING]
 
 - input: username
 
 - output: a list of usernames
 
-#### add
+#### add [WORKING]
 
 - input: adder username, added username
 
 - output: 1 (previously not friends), 2 (were friends), 3 (user doesn't exist)
 
-#### delete
+#### delete [WORKING]
 
 - input: deleter username, deleted username
 
@@ -320,19 +326,19 @@ quit
 
 ### chat with a friend
 
-#### text message
+#### text message [WORKING]
 
 - input: sender username, receiver username, message
 
 - output: none
 
-#### image / binary data
+#### image / binary data [WORKING]
 
 - input: sender username, receiver username, filename
 
 - output: none
 
-#### read history
+#### read history [WORKING]
 
 - input: sender username, receiver username
 
@@ -348,7 +354,7 @@ quit
 
 - update the range of read history
 
-#### get image / binary data
+#### get image / binary data [WORKING]
 
 - input: sender username, receiver username, filename
 

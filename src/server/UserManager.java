@@ -42,9 +42,10 @@ public class UserManager {
             File log = new File(userFriend, Chatroom.histfile);
             log.createNewFile();
             RandomAccessFile content = new RandomAccessFile(log, "rw");
-            content.writeLong(0);
+            content.writeLong(0); // useless padding, last seen
+            content.writeLong(0); // offset of the last message
             content.seek(0);
-            content.writeLong(content.length());
+            content.writeLong(content.length()); // last seen is set to the end of file
             content.close();
         }
         catch(IOException e) {
