@@ -1,2 +1,2 @@
 #!/bin/sh
-java -cp bin WebServer $@
+java -cp bin:lib/json-java.jar WebServer $@

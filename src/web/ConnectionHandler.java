@@ -9,9 +9,11 @@ import java.util.List;
 
 import web.http.HTTPRequest;
 import web.http.HybridInputStream;
+import web.http.request.BadRequest;
 import web.http.request.GetRequest;
 import web.http.request.PostRequest;
 import web.http.request.RequestType;
+import web.http.response.BadResponse;
 import web.http.response.HTMLResponse;
 import web.http.response.ScriptResponse;
 import web.http.response.NotFoundResponse;
@@ -31,7 +33,7 @@ public class ConnectionHandler implements Runnable {
             "/common.js",
             "/lobby.js",
             "/login.js"
-            );
+        );
         new Thread(this).start();
     }
 
@@ -45,6 +47,15 @@ public class ConnectionHandler implements Runnable {
             System.err.println(request.getClass());
             if (request.type == RequestType.GET) {
                 handle_get((GetRequest) request);
+            }
+            else if(request.type == RequestType.POST) {
+                PostRequestHandler.handle((PostRequest) request, new DataOutputStream(socket.getOutputStream()));
+            }
+            else if(request.type == RequestType.BAD) {
+                handle_bad((BadRequest) request);
+            }
+            else {
+                System.err.println("unrecognised request");
             }
             socket.close();
 
@@ -82,5 +93,9 @@ public class ConnectionHandler implements Runnable {
             System.err.println(e);
             new NotFoundResponse().WriteResponse(new DataOutputStream(socket.getOutputStream()));
         }
+    }
+
+    private void handle_bad(BadRequest request) throws IOException {
+        new BadResponse().WriteResponse(new DataOutputStream(socket.getOutputStream()));
     }
 }

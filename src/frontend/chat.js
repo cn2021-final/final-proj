@@ -48,6 +48,15 @@ function refresh() {
 }
 
 function sendText() {
+  fetch("/send-text",{
+    method: "POST",
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      sender: "a",
+      receiver: "b",
+      content: "content"
+    })
+  });
   // TODO: send a post request to update chat history
   refresh();
 }

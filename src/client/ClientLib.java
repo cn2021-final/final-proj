@@ -35,6 +35,7 @@ public class ClientLib {
     private final DataOutputStream output;
 
     private ClientLib(String username) throws IOException {
+        System.err.println("trying to connect to " + addr + ":" + port);
         socket = new Socket(addr, port);
         input = new DataInputStream(socket.getInputStream());
         output = new DataOutputStream(socket.getOutputStream());
