@@ -362,6 +362,8 @@ quit
 
 ## interface [WORKING]
 
+- Use `localStorage.setItem()` and `localStorage.getItem()` to store username.
+
 ### login
 
 - Accept a username of length 1~32 and use a get request to request the corresponding lobby page
