@@ -395,8 +395,7 @@ quit
 ```json
 {
     "sender": "<sender username>",
-    "receiver": "<receiver username>",
-    "operation": 0
+    "receiver": "<receiver username>"
 }
 ```
 
@@ -409,8 +408,7 @@ quit
 ```json
 {
     "sender": "<sender username>",
-    "receiver": "<receiver username>",
-    "operation": 1
+    "receiver": "<receiver username>"
 }
 ```
 
@@ -423,8 +421,7 @@ quit
 ```json
 {
     "sender": "<sender username>",
-    "receiver": "<receiver username>",
-    "operation": 2
+    "receiver": "<receiver username>"
 }
 ```
 
@@ -455,7 +452,7 @@ quit
 
 - reload the latest history
 
-- should send a post request indicating the current user, the chatting friend, the message type (1), and the message content
+- should send a post request indicating the current user, the chatting friend, and the message content
 
 - request: `./send-text`
 
@@ -463,7 +460,6 @@ quit
   {
       "sender": "<sender username>",
       "receiver": "<receiver username>",
-      "type": 1,
       "content": "<message content>"
   }
   ```
@@ -474,7 +470,7 @@ quit
 
 - reload the latest history
 
-- should send a post request indicating the current user, the chatting friend, the message type (2/3), and the file
+- should send a post request indicating the current user, the chatting friend, and the file
 
 - request: `./send-image`, `./send-file`
   
