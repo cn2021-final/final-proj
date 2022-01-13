@@ -13,6 +13,7 @@ import web.http.request.GetRequest;
 import web.http.request.PostRequest;
 import web.http.request.RequestType;
 import web.http.response.HTMLResponse;
+import web.http.response.ScriptResponse;
 import web.http.response.NotFoundResponse;
 
 public class ConnectionHandler implements Runnable {
@@ -64,13 +65,19 @@ public class ConnectionHandler implements Runnable {
 
     private void handle_get(GetRequest request) throws IOException {
         try {
-            // TODO: list available locations and only send file in those
             if (!locations.contains(request.location)) {
                 System.err.println(request.location);
                 throw new FileNotFoundException("");
             }
-            new HTMLResponse("./src/frontend" + request.location)
-                .WriteResponse(new DataOutputStream(socket.getOutputStream()));
+            String extension = request.location.split("\\.")[1];
+            System.err.println(extension);
+            if (extension.equals("html")) {
+                new HTMLResponse("./src/frontend" + request.location)
+                    .WriteResponse(new DataOutputStream(socket.getOutputStream()));
+            } else if (extension.equals("js")) {
+                new ScriptResponse("./src/frontend" + request.location)
+                    .WriteResponse(new DataOutputStream(socket.getOutputStream()));
+            }
         } catch (FileNotFoundException e) {
             System.err.println(e);
             new NotFoundResponse().WriteResponse(new DataOutputStream(socket.getOutputStream()));

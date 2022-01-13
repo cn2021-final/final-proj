@@ -10,7 +10,7 @@ function createButton(text, handler) {
 }
 
 function getUsername() {
-  return document.getElementById('username').value;
+  return localStorage.getItem('username');
 }
 
 export { createText, createButton, getUsername };
