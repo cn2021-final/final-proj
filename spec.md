@@ -362,6 +362,8 @@ quit
 
 ## interface [WORKING]
 
+- Used [GitHub - stleary/JSON-java: A reference implementation of a JSON package in Java.](https://github.com/stleary/JSON-java.git), so you need to clone the repo and place it at the same directory as this repo.
+
 - Use `localStorage.setItem()` and `localStorage.getItem()` to store username.
 
 ### login
@@ -375,27 +377,25 @@ quit
 #### friend list response format
 
 ```json
-{
-    "list": [
-        "<friend-username1>",
-        "<friend-username2>",
-        ...
-    ]
-}
+[
+  "<friend-username1>",
+  "<friend-username2>",
+  ...
+]
 ```
 
 #### renew
 
 - retrieve the latest friend list
 
-- should send a get request indicating the deleter and the deleted, and update the list according to the response
+- should send a post request indicating the asking user, and update the list according to the response
 
 - request: `./renew`
 
 ```json
 {
     "sender": "<sender username>",
-    "receiver": "<receiver username>"
+    "receiver": ""
 }
 ```
 
@@ -435,15 +435,13 @@ quit
 #### chat history response format
 
 ```json
-{    
-    "history": [
-        [1, sender, content],
-        [2, sender, image address on server],
-        [3, sender, file address on server],
-        [2, sender, image address on server],
-        ...
-    ]
-}
+[
+        [1, sender, content],
+        [2, sender, image address on server],
+        [3, sender, file address on server],
+        [2, sender, image address on server],
+        ...
+]
 ```
 
 #### text
