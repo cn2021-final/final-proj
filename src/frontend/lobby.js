@@ -19,7 +19,7 @@ function createFriendList(usernameList) {
 
 function chat(partner) {
   return () => {
-    document.location = `./chat.html?sender=${getUsername()}&receiver=${partner}`;
+    document.location = './chat.html';
   }
 }
 

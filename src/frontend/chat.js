@@ -32,7 +32,7 @@ function prependChatList(ul, chatLog) {
 }
 
 function lobby() {
-  document.location = './lobby.html?username=' + getUsername();
+  document.location = './lobby.html';
 }
 
 function loadMore() {
