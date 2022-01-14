@@ -2,11 +2,13 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import client.ClientLib;
 import web.ConnectionHandler;
 
 public class WebServer {
     ServerSocket socket;
     public static void main(String[] argv) {
+        ClientLib.init(argv[1], Integer.parseInt(argv[2]));
         new WebServer(Integer.parseInt(argv[0])).run();
     }
 

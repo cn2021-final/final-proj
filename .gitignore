@@ -1,4 +1,4 @@
-src/**/*.swp
+/src/**/*.swp
 bin/*
 .vscode
 serverDir

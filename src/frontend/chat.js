@@ -57,7 +57,16 @@ function refresh() {
 }
 
 function sendText() {
-  postJSON('send-text', JSON.stringify({'sender': getUsername(), 'receiver': getPartner()}), appendChatList);
+  fetch("/send-text",{
+    method: "POST",
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      sender: getUsername(),
+      receiver: getPartner(),
+      content: getSendedText()
+    })
+  });
+  // TODO: update chat history accordingly
 }
 
 function sendImage() {
