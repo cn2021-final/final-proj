@@ -53,6 +53,7 @@ public class ClientLib {
     public static FriendStatus addFriend(String user, String friend) throws IOException {
         ClientLib lib = new ClientLib(user);
         lib.output.writeInt(LobbyActions.ADD.code);
+        lib.output.writeUTF(friend);
         FriendStatus result = FriendStatus.translate(lib.input.readInt());
         lib.afterOperation();
         return result;
@@ -61,6 +62,7 @@ public class ClientLib {
     public static FriendStatus delFriend(String user, String friend) throws IOException {
         ClientLib lib = new ClientLib(user);
         lib.output.writeInt(LobbyActions.DEL.code);
+        lib.output.writeUTF(friend);
         FriendStatus result = FriendStatus.translate(lib.input.readInt());
         lib.afterOperation();
         return result;

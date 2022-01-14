@@ -3,15 +3,19 @@ function createFriendListItem(name) {
   const li = document.createElement('li');
   li.appendChild(createText(name));
   li.appendChild(createButton('chat', chat(name)));
-  li.appendChild(createButton('delete', del(li, name)));
+  li.appendChild(createButton('delete', del(name)));
   return li;
 }
 
-function createFriendList() {
-  const ul = document.createElement('ul');
+function updateFriendList(response) {
+  let ul = document.getElementById('friend-list');
+  if (ul !== null)
+    ul.parentElement.removeChild(ul);
+  ul = document.createElement('ul');
   ul.id = 'friend-list';
-
-  usernameList = JSON.parse(this.responseText);
+  let usernameList = response;
+  console.log(typeof(usernameList));
+  console.log(usernameList);
   
   for (const name of usernameList) {
     ul.appendChild(createFriendListItem(name));
@@ -19,15 +23,18 @@ function createFriendList() {
   document.body.appendChild(ul);
 }
 
-function updateFriendList() {
-  const ul = document.getElementById('friend-list');
-
-  usernameList = JSON.parse(this.responseText);
-  
-  for (const name of usernameList) {
-    ul.appendChild(createFriendListItem(name));
-  }
-  document.body.appendChild(ul);
+function renew(firstTime=false) {
+  fetch('/renew', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      sender: getUsername(),
+      receiver: ''
+    })
+  })
+    .then((response) => response.json())
+    .then(updateFriendList)
+    .catch((reason) => console.log(reason));
 }
 
 function chat(partner) {
@@ -37,23 +44,41 @@ function chat(partner) {
   }
 }
 
-function del(li, partner) {
-  return () => {
-    li.parentElement.removeChild(li);
-    postJSON('delete', JSON.stringify({'sender': getUsername(), 'receiver': partner}), updateFriendList);
-  }
-}
-
 function add() {
   return () => {
     const name = document.getElementById('added-username').value;
     if (name.length >= 1 && name.length <= 32) {
-      postJSON('add', JSON.stringify({'sender': getUsername(), 'receiver': name}), updateFriendList);
+      fetch('/add', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          sender: getUsername(),
+          receiver: name
+        })
+      })
+        .then((response) => response.json())
+        .then(updateFriendList)
+        .catch((reason) => console.log(reason));
     }
   }
 }
 
+function del(partner) {
+  return () => {
+    fetch('/delete', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        sender: getUsername(),
+        receiver: partner
+      })
+    })
+      .then((response) => response.json())
+      .then(updateFriendList)
+      .catch((reason) => console.log(reason));
+  }
+}
 
-postJSON('renew', JSON.stringify({'sender': getUsername(), 'receiver': '' }), createFriendList);
-
+renew();
+document.getElementById('renew').onclick = renew;
 document.getElementById('send-added-username').onclick = add();
