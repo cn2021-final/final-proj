@@ -19,37 +19,45 @@ function createChatListItem(type, name, message) {
   return li;
 }
 
-function appendChatList(ul, chatLog) {
+function appendChatList() {
+  let chatLog = JSON.parse(this.responseText);
+  let ul = getUl();
   for (const item of chatLog) {
     ul.appendChild(createChatListItem.apply(this, item));
   }
 }
 
-function prependChatList(ul, chatLog) {
+function prependChatList() {
+  let chatLog = JSON.parse(this.responseText);
+  let ul = getUl();
   for (const item of chatLog.slice().reverse()) {
     ul.insertBefore(createChatListItem.apply(this, item), ul.firstChild);
   }
 }
+
+function getUl() {
+  return document.getElementById('chat-list');
+}
+
+function getSendedText() {
+  return document.getElementById('
+}
+
 
 function lobby() {
   document.location = './lobby.html';
 }
 
 function loadMore() {
-  // TODO: Send a post request to load more history
-  const moreLog = log2;
-  prependChatList(ul, moreLog);
+  postJSON('more-history', JSON.stringify({'sender': getUsername(), 'receiver': getPartner()}), prependChatList);
 }
 
 function refresh() {
-  // TODO: send a post request to load new messages
-  const moreLog = log1;
-  appendChatList(ul, moreLog);
+  postJSON('refresh', JSON.stringify({'sender': getUsername(), 'receiver': getPartner()}), appendChatList);
 }
 
 function sendText() {
-  // TODO: send a post request to update chat history
-  refresh();
+  postJSON('send-text', JSON.stringify({'sender': getUsername(), 'receiver': getPartner()}), appendChatList);
 }
 
 function sendImage() {
@@ -75,7 +83,7 @@ const log2 = [
 const ul = document.createElement('ul');
 ul.id = 'chat-list';
 document.body.insertBefore(ul, document.getElementById('before-chat'));
-appendChatList(ul, log1);
+// TODO: load initial chat history
 document.getElementById('lobby').onclick = lobby;
 document.getElementById('load-more').onclick = loadMore;
 document.getElementById('refresh').onclick = refresh;

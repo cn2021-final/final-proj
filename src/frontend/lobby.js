@@ -1,4 +1,4 @@
-import { createText, createButton, getUsername } from './common.js';
+import { createText, createButton, getUsername, postJSON } from './common.js';
 function createFriendListItem(name) {
   const li = document.createElement('li');
   li.appendChild(createText(name));
@@ -7,18 +7,32 @@ function createFriendListItem(name) {
   return li;
 }
 
-function createFriendList(usernameList) {
+function createFriendList() {
   const ul = document.createElement('ul');
   ul.id = 'friend-list';
+
+  usernameList = JSON.parse(this.responseText);
   
   for (const name of usernameList) {
     ul.appendChild(createFriendListItem(name));
   }
-  return ul;
+  document.body.appendChild(ul);
+}
+
+function updateFriendList() {
+  const ul = document.getElementById('friend-list');
+
+  usernameList = JSON.parse(this.responseText);
+  
+  for (const name of usernameList) {
+    ul.appendChild(createFriendListItem(name));
+  }
+  document.body.appendChild(ul);
 }
 
 function chat(partner) {
   return () => {
+    localStorage.setItem('partner', partner);
     document.location = './chat.html';
   }
 }
@@ -26,21 +40,20 @@ function chat(partner) {
 function del(li, partner) {
   return () => {
     li.parentElement.removeChild(li);
-    // TODO: Use post to update the server side friend list
+    postJSON('delete', JSON.stringify({'sender': getUsername(), 'receiver': partner}), updateFriendList);
   }
 }
 
-function add(ul) {
+function add() {
   return () => {
     const name = document.getElementById('added-username').value;
     if (name.length >= 1 && name.length <= 32) {
-      ul.appendChild(createFriendListItem(name));
-      // TODO: Use post to update the server side friend list
+      postJSON('add', JSON.stringify({'sender': getUsername(), 'receiver': name}), updateFriendList);
     }
   }
 }
 
 
-const ul = createFriendList(['Titus', 'JGR']); // TODO: use the response to build list
-document.body.appendChild(ul);
-document.getElementById('send-added-username').onclick = add(ul);
+postJSON('renew', JSON.stringify({'sender': getUsername(), 'receiver': '' }), createFriendList);
+
+document.getElementById('send-added-username').onclick = add();

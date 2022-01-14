@@ -13,4 +13,17 @@ function getUsername() {
   return localStorage.getItem('username');
 }
 
-export { createText, createButton, getUsername };
+function getPartner() {
+  return localStorage.getItem('partner');
+}
+
+function postJSON(action, jsonString, callback, asynchronous=true) {
+  let oReq = new XMLHttpRequest();
+  oReq.addEventListener('load', callback);
+  oReq.addEventListener('error', (e) => console.log(e));
+  oReq.open("POST", './' + action, asynchronous);
+  oReq.setRequestHeader('Content-Type', 'application/json');
+  oReq.send(jsonString);
+}
+
+export { createText, createButton, getUsername, postJSON };
