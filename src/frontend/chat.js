@@ -1,29 +1,28 @@
-import { createText, createButton, getUsername } from './common.js';
+import { createText, createButton, getUsername, getPartner } from './common.js';
 
-function createChatListItem(type, name, message) {
+function createChatListItem(item) {
   const li = document.createElement('li');
-  li.appendChild(createText(name + ': '));
-  if (type == 1) { // normal text
-    li.appendChild(createText(message));
-  } else if (type == 2) { // image
+  li.appendChild(createText(item.user + ': '));
+  if (item.type == 1) { // normal text
+    li.appendChild(createText(item.content));
+  } else if (item.type == 2) { // image
     const img = document.createElement('img');
-    img.src = message;
+    img.src = item.content;
     li.appendChild(img);
   } else { // binary
     const a = document.createElement('a');
-    a.href = message;
+    a.href = item.content;
     a.download = true;
-    a.appendChild(createText(message));
+    a.appendChild(createText(item.content));
     li.appendChild(a);
   }
   return li;
 }
 
-function appendChatList() {
-  let chatLog = JSON.parse(this.responseText);
+function appendChatList(chatLog) {
   let ul = getUl();
   for (const item of chatLog) {
-    ul.appendChild(createChatListItem.apply(this, item));
+    ul.appendChild(createChatListItem(item));
   }
 }
 
@@ -40,7 +39,7 @@ function getUl() {
 }
 
 function getSendedText() {
-  return document.getElementById('
+  return document.getElementById('text-message').value;
 }
 
 
@@ -48,12 +47,28 @@ function lobby() {
   document.location = './lobby.html';
 }
 
+function setTitle(partner) {
+  const title = 'Chat with ' + partner;
+  document.title = title;
+  const h1 = document.getElementsByTagName('h1')[0];
+  h1.textContent = title;
+}
+
 function loadMore() {
-  postJSON('more-history', JSON.stringify({'sender': getUsername(), 'receiver': getPartner()}), prependChatList);
 }
 
 function refresh() {
-  postJSON('refresh', JSON.stringify({'sender': getUsername(), 'receiver': getPartner()}), appendChatList);
+  fetch("/refresh",{
+    method: "POST",
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      sender: getUsername(),
+      receiver: getPartner(),
+    })
+  })
+  .then((response) => response.json())
+  .then(appendChatList)
+  .catch((reason) => console.log(reason));
 }
 
 function sendText() {
@@ -69,26 +84,21 @@ function sendText() {
   // TODO: update chat history accordingly
 }
 
-function sendImage() {
-  // TODO: send a post request to update chat history
-  refresh();
+function sendFile(isImage=false) {
+  return () => {
+    const fileField = document.getElementById(isImage ? 'image' : 'file').files[0];
+    const username = getUsername();
+    const partner = getPartner();
+    const filename = fileField.name;
+    fetch((isImage ? "/send-image" : "/send-file") + `/${username}/${partner}/${filename}`,{
+      method: "POST",
+      headers: {'Content-Type': (isImage ? 'image/png' : 'application/octet-stream')},
+      body: fileField});
+    // TODO: update chat history accordingly
+  }
 }
 
-function sendFile() {
-  // TODO: send a post request to update chat history
-  refresh();
-}
-
-const log1 = [
-  [1, 'Titus', 'Hi'],
-  [1, 'titusjgr', 'Hey'],
-];
-
-const log2 = [
-  [2, 'Titus', 'https://1.bp.blogspot.com/-7MEg_48n4Gc/YHDkTOuiU5I/AAAAAAABdnc/a1kgLWWDiIEbTbWL7v8dSVKxjjxv-ALgQCNcBGAsYHQ/s90-c/vegetable_lettuce.png'],
-  [3, 'titusjgr', 'https://git.musl-libc.org/cgit/musl/plain/src/aio/aio_suspend.c']
-];
-
+setTitle(getPartner());
 const ul = document.createElement('ul');
 ul.id = 'chat-list';
 document.body.insertBefore(ul, document.getElementById('before-chat'));
@@ -97,5 +107,5 @@ document.getElementById('lobby').onclick = lobby;
 document.getElementById('load-more').onclick = loadMore;
 document.getElementById('refresh').onclick = refresh;
 document.getElementById('send-text').onclick = sendText;
-document.getElementById('send-image').onclick = sendImage;
-document.getElementById('send-file').onclick = sendFile;
+document.getElementById('send-image').onclick = sendFile(true);
+document.getElementById('send-file').onclick = sendFile(false);

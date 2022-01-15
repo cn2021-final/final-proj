@@ -1,4 +1,4 @@
-import { createText, createButton, getUsername, postJSON } from './common.js';
+import { createText, createButton, getUsername } from './common.js';
 function createFriendListItem(name) {
   const li = document.createElement('li');
   li.appendChild(createText(name));

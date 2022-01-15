@@ -81,7 +81,6 @@ public class ConnectionHandler implements Runnable {
                 throw new FileNotFoundException("");
             }
             String extension = request.location.split("\\.")[1];
-            System.err.println(extension);
             if (extension.equals("html")) {
                 new HTMLResponse("./src/frontend" + request.location)
                     .WriteResponse(new DataOutputStream(socket.getOutputStream()));

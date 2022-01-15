@@ -2,8 +2,10 @@ package client;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
 import java.net.Socket;
 import java.nio.file.Paths;
@@ -42,6 +44,16 @@ public class ClientLib {
         login(username);
     }
 
+    public static void onlyLogin(String username) throws IOException {
+        ClientLib lib = new ClientLib(username);
+        // Create needed directories
+        if (new File(libDir, username).mkdir())
+            System.err.println("New user " + username);
+        else
+            System.err.println(username + " login");
+        lib.afterOperation();
+    }
+
     public static String[] listFriends(String username) throws IOException {
         ClientLib lib = new ClientLib(username);
         lib.output.writeInt(LobbyActions.LIST.code);
@@ -55,6 +67,9 @@ public class ClientLib {
         lib.output.writeInt(LobbyActions.ADD.code);
         lib.output.writeUTF(friend);
         FriendStatus result = FriendStatus.translate(lib.input.readInt());
+        if (result == FriendStatus.NOTFRIEND) {
+            createDirectories(user, friend);
+        }
         lib.afterOperation();
         return result;
     }
@@ -64,6 +79,9 @@ public class ClientLib {
         lib.output.writeInt(LobbyActions.DEL.code);
         lib.output.writeUTF(friend);
         FriendStatus result = FriendStatus.translate(lib.input.readInt());
+        if (result == FriendStatus.ISFRIEND) {
+            removeDirectories(user, friend);
+        }
         lib.afterOperation();
         return result;
     }
@@ -100,8 +118,11 @@ public class ClientLib {
         ChatLog[] logs = new ChatLog[len];
         for(int i = 0; i < len; ++i) {
             LogType type = LogType.translate(lib.input.readInt());
+            System.err.println(type);
             String from = lib.input.readUTF();
+            System.err.println(from);
             String content = lib.input.readUTF();
+            System.err.println(content);
             logs[i] = new ChatLog(type, from, content);
         }
         lib.afterOperation();
@@ -127,6 +148,11 @@ public class ClientLib {
         file.close();
         lib.afterOperation();
         return f;
+    }
+
+    public static FileOutputStream streamFromClient(String user, String friend, String filename) throws FileNotFoundException {
+        File path = new File(libDir, user + "/" + friend + "/" + filename);
+        return new FileOutputStream(path);
     }
 
     private void sendData(String filename) throws IOException {
@@ -163,6 +189,29 @@ public class ClientLib {
         String suffix = chunks.stream().collect(Collectors.joining("."));
         if(suffix.length() > 0) return '.' + suffix;
         return suffix;
+    }
+
+    private static void createDirectories(String user, String friend) {
+        // Should be called with existing friend
+        File userDir = new File(libDir, user);
+        File friendDir = new File(libDir, friend);
+        new File(userDir, friend).mkdir();
+        new File(friendDir, user).mkdir();
+    }
+
+
+    private static void removeDirectories(String user, String friend) {
+        File userDir = new File(libDir, user);
+        File friendDir = new File(libDir, friend);
+        File userFriendDir = new File(userDir, friend);
+        File friendUserDir = new File(friendDir, user);
+        if (userFriendDir.exists()) removeDirectory(userFriendDir);
+        if (friendUserDir.exists()) removeDirectory(friendUserDir);
+    }
+
+    private static void removeDirectory(File dir) {
+        for (String content : dir.list()) new File(dir, content).delete();
+        dir.delete();
     }
 
     private static File generateFile() {

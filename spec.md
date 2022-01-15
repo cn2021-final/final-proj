@@ -368,7 +368,13 @@ quit
 
 ### login
 
-- Accept a username of length 1~32 and use a get request to request the corresponding lobby page
+- Accept a username of length 1~32, use a post request to indicate a user login (for new user creation), and use a get request to request the corresponding lobby page
+- request: `./login`
+- ```json
+  {
+      "sender": "<sender username>"
+  }
+  ```
 
 ### lobby
 
@@ -468,11 +474,24 @@ quit
 
 - reload the latest history
 
-- should send a post request indicating the current user, the chatting friend, and the file
-
-- request: `./send-image`, `./send-file`
+- should send two post request indicating the current user, the chatting friend, and the file
   
-  - Use the method mentioned in [Using FormData Objects - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects)
+  - First request: `./get-image-path`, `./get-file-path`
+    
+    - Get the uploaded file's path on web server.
+    - Response (plain text): `<sender path>/<receiver path>/<filename>`
+    - Request:
+    - ```json
+      {
+          "sender": "<sender username>",
+          "receiver": "<receiver username>",
+          "filename": "<filename>"
+      }
+      ```
+  
+  - Second request: `./send-image`, `./send-file`
+    
+    - Raw binary file content.
 
 #### new messages
 
