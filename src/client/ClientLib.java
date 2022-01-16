@@ -153,6 +153,10 @@ public class ClientLib {
         return new FileOutputStream(path);
     }
 
+    public static String getDataPath(String path) {
+        return new File(libDir, path).toString();
+    }
+
     private void sendData(String filename) throws IOException {
         output.writeUTF(getSuffix(filename));
         File fileToSend = new File(Paths.get(filename).toString());

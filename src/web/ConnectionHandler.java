@@ -15,8 +15,11 @@ import web.http.request.PostRequest;
 import web.http.request.RequestType;
 import web.http.response.BadResponse;
 import web.http.response.HTMLResponse;
+import web.http.response.FileResponse;
 import web.http.response.ScriptResponse;
 import web.http.response.NotFoundResponse;
+
+import client.ClientLib;
 
 public class ConnectionHandler implements Runnable {
     private Socket socket;
@@ -77,8 +80,8 @@ public class ConnectionHandler implements Runnable {
     private void handle_get(GetRequest request) throws IOException {
         try {
             if (!locations.contains(request.location)) {
-                System.err.println(request.location);
-                throw new FileNotFoundException("");
+                new FileResponse(ClientLib.getDataPath(request.location)).WriteResponse(new DataOutputStream(socket.getOutputStream()));
+                return;
             }
             String extension = request.location.split("\\.")[1];
             if (extension.equals("html")) {
