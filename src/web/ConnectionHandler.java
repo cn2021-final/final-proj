@@ -69,7 +69,9 @@ public class ConnectionHandler implements Runnable {
     private void handle_get(GetRequest request) throws IOException {
         try {
             if (!locations.contains(request.location)) {
-                new FileResponse(ClientLib.getDataPath(request.location)).WriteResponse(new DataOutputStream(socket.getOutputStream()));
+                DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
+                new FileResponse(ClientLib.getDataPath(request.location)).WriteResponse(outputStream);
+                outputStream.close();
                 return;
             }
             String extension = request.location.split("\\.")[1];
