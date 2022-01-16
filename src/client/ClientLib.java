@@ -20,7 +20,6 @@ import common.actions.LobbyActions;
 import common.chat.ChatHistory;
 import common.chat.ChatLog;
 import common.chat.LogType;
-import server.Chatroom;
 
 public class ClientLib {
     private static String addr;
@@ -54,6 +53,7 @@ public class ClientLib {
         else
             System.err.println(username + " login");
         lib.afterOperation();
+        for(String friend : listFriends(username)) new File(libDir, friend).mkdir();
     }
 
     public static String[] listFriends(String username) throws IOException {
@@ -172,7 +172,7 @@ public class ClientLib {
         }
         return history;
     }
-    
+
     public static String getDataPath(String path) {
         return new File(libDir, path).toString();
     }

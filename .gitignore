@@ -1,8 +1,8 @@
 /src/**/*.swp
 bin/*
 .vscode
-serverDir
-libDir
+/serverDir
+/libDir
 /server
 /client
 /web

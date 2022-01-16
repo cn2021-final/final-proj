@@ -63,7 +63,12 @@ public class Chatroom {
         FileLock lock = lockSession();
         if(lock == null) return history;
         try {
-            while(offset != 0 && count-- >= 0) {
+            if(offset < 0) {
+                userLog.seek(0);
+                userLog.readLong(); // last read
+                offset = userLog.readLong();
+            }
+            while(offset > 0 && count-- >= 0) {
                 userLog.seek(offset);
                 offset = userLog.readLong();
                 history.offset = offset;
