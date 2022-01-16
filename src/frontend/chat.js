@@ -167,13 +167,26 @@ function repeatedlyUpdates() {
   }
 }
 
+function getOffset() {
+  fetch("/get-offset",{
+    method: "POST",
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      sender: getUsername(),
+      receiver: getPartner(),
+    })
+  }).then((response) => response.json()).then((result) => { offset = result.offset });
+}
+  
+
 setTitle(getPartner());
 const ul = document.createElement('ul');
 ul.id = 'chat-list';
 document.body.insertBefore(ul, document.getElementById('before-chat'));
 
 // The offset for loading more history
-let offset = -1;
+let offset;
+getOffset();
 // The images that has to be reloaded at each interval.
 const unfetchedImages = new Set();
 const refetchInterval = 10000; // Time to refetch in ms
