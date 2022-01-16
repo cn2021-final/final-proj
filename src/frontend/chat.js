@@ -2,36 +2,79 @@ import { createText, createButton, getUsername, getPartner } from './common.js';
 
 function createChatListItem(item) {
   const li = document.createElement('li');
-  li.appendChild(createText(item.user + ': '));
-  if (item.type == 1) { // normal text
-    li.appendChild(createText(item.content));
-  } else if (item.type == 2) { // image
-    const img = document.createElement('img');
-    img.src = item.content;
-    li.appendChild(img);
-  } else { // binary
-    const a = document.createElement('a');
-    a.href = item.content;
-    a.download = true;
-    a.appendChild(createText(item.content));
-    li.appendChild(a);
+  li.appendChild(createText(item[1] + ': '));
+  if (item[0] == 1) { // normal text
+    li.appendChild(createText(item[2]));
+  } else {
+    const sender = item[1];
+    const receiver = getReceiver(sender);
+    const path = `./${sender}/${receiver}/${item[2]}`;
+
+    if (item[0] == 2) { // image
+      const img = document.createElement('img');
+      img.src = path;
+      img.onerror = function () {
+        unfetchedImages.add(path);
+      }
+      li.appendChild(img);
+    } else { // binary
+      const a = document.createElement('a');
+      a.href = path;
+      a.download = true;
+      a.appendChild(createText(item[2]));
+      li.appendChild(a);
+    }
   }
   return li;
 }
 
+function getReceiver(sender) {
+  return (sender != getUsername()) ? getUsername() : getPartner();
+}
+
 function appendChatList(chatLog) {
   let ul = getUl();
-  for (const item of chatLog) {
-    ul.appendChild(createChatListItem(item));
-  }
+  chatLog.reverse();
+  
+  // Send post requests to tell Web Server to retrieve the file
+  // from Main Server.
+  const requests = chatLog.map(function (item) { 
+    const sender = item[1];
+    const receiver = getReceiver(sender);
+    fetch("/get-file",{
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        sender: sender,
+        receiver: receiver,
+        filename: item[2]
+      })
+    })
+  });
+  Promise.allSettled(requests)
+    .then((responses) => chatLog.forEach((item) => ul.appendChild(createChatListItem(item))));
 }
 
 function prependChatList() {
   let chatLog = JSON.parse(this.responseText);
   let ul = getUl();
-  for (const item of chatLog.slice().reverse()) {
-    ul.insertBefore(createChatListItem.apply(this, item), ul.firstChild);
-  }
+  // Send post requests to tell Web Server to retrieve the file
+  // from Main Server.
+  const requests = chatLog.map(function (item) { 
+    const sender = item[1];
+    const receiver = getReceiver(sender);
+    fetch("/get-file",{
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        sender: sender,
+        receiver: receiver,
+        filename: item[2]
+      })
+    })
+  });
+  Promise.allSettled(requests)
+    .then((responses) => chatLog.forEach((item) => ul.appendChild(createChatListItem(item))));
 }
 
 function getUl() {
@@ -80,8 +123,7 @@ function sendText() {
       receiver: getPartner(),
       content: getSendedText()
     })
-  });
-  // TODO: update chat history accordingly
+  }).then(() => refresh());
 }
 
 function sendFile(isImage=false) {
@@ -93,8 +135,22 @@ function sendFile(isImage=false) {
     fetch((isImage ? "/send-image" : "/send-file") + `/${username}/${partner}/${filename}`,{
       method: "POST",
       headers: {'Content-Type': (isImage ? 'image/png' : 'application/octet-stream')},
-      body: fileField});
-    // TODO: update chat history accordingly
+      body: fileField}).then(() => refresh());
+  }
+}
+
+function repeatedlyUpdates() {
+  for (const path of unfetchedImages) {
+    let img = document.querySelector(`img[src="${path}"]`);
+    const li = img.parentElement;
+    li.removeChild(img);
+    img = document.createElement('img');
+    img.src = path;
+    img.onerror = function () {
+      unfetchedImages.add(path);
+    }
+    li.appendChild(img);
+    unfetchedImages.delete(path);
   }
 }
 
@@ -102,10 +158,17 @@ setTitle(getPartner());
 const ul = document.createElement('ul');
 ul.id = 'chat-list';
 document.body.insertBefore(ul, document.getElementById('before-chat'));
-// TODO: load initial chat history
+
+// The images that has to be reloaded at each interval.
+const unfetchedImages = new Set();
+const refetchInterval = 2000; // Time to refetch in ms
+
+refresh();
 document.getElementById('lobby').onclick = lobby;
 document.getElementById('load-more').onclick = loadMore;
 document.getElementById('refresh').onclick = refresh;
 document.getElementById('send-text').onclick = sendText;
 document.getElementById('send-image').onclick = sendFile(true);
 document.getElementById('send-file').onclick = sendFile(false);
+
+setInterval(repeatedlyUpdates, refetchInterval);

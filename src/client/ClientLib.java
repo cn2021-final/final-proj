@@ -136,7 +136,7 @@ public class ClientLib {
         lib.output.writeUTF(filename);
         long size = lib.input.readLong(), progress = 0;
         if(size < 0) return null;
-        File f = generateFile();
+        File f = new File(libDir, user + "/" + friend + "/" + filename);
         RandomAccessFile file = new RandomAccessFile(f, "rw");
         byte[] buf = new byte[4096];
         while(progress < size) {
@@ -171,6 +171,10 @@ public class ClientLib {
             history.add(new ChatLog(type, from, content));
         }
         return history;
+    }
+    
+    public static String getDataPath(String path) {
+        return new File(libDir, path).toString();
     }
 
     private void sendData(String filename) throws IOException {

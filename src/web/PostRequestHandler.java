@@ -39,6 +39,9 @@ public class PostRequestHandler {
             case "/send-text":
                 sendText(request, output);
                 return;
+            case "/get-file":
+                getFile(request, output);
+                return;
         }
         if (request.location.startsWith("/send-file")) {
             sendFile(request, output);
@@ -206,6 +209,26 @@ public class PostRequestHandler {
             ClientLib.sendImage(sender, receiver, filename);
         }
         catch(IOException e) {
+            System.err.println(e);
+            new BadResponse().WriteResponse(output);
+            return;
+        }
+
+        new GeneralGoodResponse().WriteResponse(output);
+    }
+
+    private static void getFile(PostRequest request, DataOutputStream output) throws IOException {
+        ByteArrayOutputStream input = new ByteArrayOutputStream();
+        request.readData(input);
+        JSONObject obj;
+        try {
+            obj = new JSONObject(input.toString());
+            String sender = obj.getString("sender");
+            String receiver = obj.getString("receiver");
+            String filename = obj.getString("filename");
+            ClientLib.getBinary(sender, receiver, filename);
+        }
+        catch(JSONException | IOException e) {
             System.err.println(e);
             new BadResponse().WriteResponse(output);
             return;

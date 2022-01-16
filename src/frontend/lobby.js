@@ -18,6 +18,7 @@ function updateFriendList(response) {
   console.log(usernameList);
   
   for (const name of usernameList) {
+    if (name.length === 0) continue;
     ul.appendChild(createFriendListItem(name));
   }
   document.body.appendChild(ul);
