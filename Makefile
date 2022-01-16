@@ -8,4 +8,4 @@ build:
 	cp web.sh ../web
 
 clean:
-	rm -rf bin/* server client web
+	rm -rf bin/* server client web serverDir libDir
