@@ -471,27 +471,10 @@ quit
 #### image / binary data
 
 - click a button, select the file to upload
-
 - reload the latest history
-
-- should send two post request indicating the current user, the chatting friend, and the file
-  
-  - First request: `./get-image-path`, `./get-file-path`
-    
-    - Get the uploaded file's path on web server.
-    - Response (plain text): `<sender path>/<receiver path>/<filename>`
-    - Request:
-    - ```json
-      {
-          "sender": "<sender username>",
-          "receiver": "<receiver username>",
-          "filename": "<filename>"
-      }
-      ```
-  
-  - Second request: `./send-image`, `./send-file`
-    
-    - Raw binary file content.
+- should send one post request indicating the current user, the chatting friend, and the file
+- request: `/send-file/<sender path>/<receiver path>/<filename>`
+- raw binary file
 
 #### new messages
 

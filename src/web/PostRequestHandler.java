@@ -1,6 +1,7 @@
 package web;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -166,9 +167,12 @@ public class PostRequestHandler {
         String filename = locations[4];
         try {
             // Receive data from browser
-            request.readData(ClientLib.streamFromClient(sender, receiver, filename));
+            FileOutputStream fs = ClientLib.streamFromClient(sender, receiver, filename);
+            request.readData(fs);
+            fs.close();
 
             // Send data to server
+            ClientLib.sendBinary(sender, receiver, filename);
         }
         catch(IOException e) {
             System.err.println(e);
@@ -180,5 +184,25 @@ public class PostRequestHandler {
     }
 
     private static void sendImage(PostRequest request, DataOutputStream output) throws IOException {
+        String [] locations = request.location.split("/");
+        String sender = locations[2];
+        String receiver = locations[3];
+        String filename = locations[4];
+        try {
+            // Receive data from browser
+            FileOutputStream fs = ClientLib.streamFromClient(sender, receiver, filename);
+            request.readData(fs);
+            fs.close();
+
+            // Send data to server
+            ClientLib.sendImage(sender, receiver, filename);
+        }
+        catch(IOException e) {
+            System.err.println(e);
+            new BadResponse().WriteResponse(output);
+            return;
+        }
+
+        new GeneralGoodResponse().WriteResponse(output);
     }
 }

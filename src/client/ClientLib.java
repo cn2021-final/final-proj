@@ -98,7 +98,7 @@ public class ClientLib {
         ClientLib lib = new ClientLib(user);
         lib.enterChat(friend);
         lib.output.writeInt(ChatActions.BINARY.code);
-        lib.sendData(filename);
+        lib.sendData(Paths.get(libDir.toString(), user, friend, filename).toString());
         lib.afterOperation();
     }
 
@@ -106,7 +106,7 @@ public class ClientLib {
         ClientLib lib = new ClientLib(user);
         lib.enterChat(friend);
         lib.output.writeInt(ChatActions.IMAGE.code);
-        lib.sendData(filename);
+        lib.sendData(Paths.get(libDir.toString(), user, friend, filename).toString());
         lib.afterOperation();
     }
 
@@ -157,7 +157,8 @@ public class ClientLib {
 
     private void sendData(String filename) throws IOException {
         output.writeUTF(getSuffix(filename));
-        RandomAccessFile file = new RandomAccessFile(new File(Paths.get(filename).toString()), "rw");
+        File fileToSend = new File(Paths.get(filename).toString());
+        RandomAccessFile file = new RandomAccessFile(fileToSend, "rw");
         long size = file.length(), progress = 0;
         output.writeLong(size);
         byte[] buf = new byte[4096];
@@ -168,6 +169,7 @@ public class ClientLib {
             progress += 4096;
         }
         file.close();
+        fileToSend.delete();
     }
 
     private void afterOperation() throws IOException {
