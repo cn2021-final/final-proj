@@ -2,25 +2,31 @@ import { createText, createButton, getUsername, getPartner } from './common.js';
 
 function createChatListItem(item) {
   const li = document.createElement('li');
-  li.appendChild(createText(item.user + ': '));
-  if (item.type == 1) { // normal text
-    li.appendChild(createText(item.content));
-  } else if (item.type == 2) { // image
-    const img = document.createElement('img');
-    img.src = item.content;
-    li.appendChild(img);
-  } else { // binary
-    const a = document.createElement('a');
-    a.href = item.content;
-    a.download = true;
-    a.appendChild(createText(item.content));
-    li.appendChild(a);
+  li.appendChild(createText(item[1] + ': '));
+  if (item[0] == 1) { // normal text
+    li.appendChild(createText(item[2]));
+  } else {
+    const sender = item[1];
+    const receiver = (sender != getUsername()) ? getUsername() : getPartner();
+    const path = `./${sender}/${receiver}/${item[2]}`;
+    if (item[0] == 2) { // image
+      const img = document.createElement('img');
+      img.src = path;
+      li.appendChild(img);
+    } else { // binary
+      const a = document.createElement('a');
+      a.href = path;
+      a.download = true;
+      a.appendChild(createText(item[2]));
+      li.appendChild(a);
+    }
   }
   return li;
 }
 
 function appendChatList(chatLog) {
   let ul = getUl();
+  chatLog.reverse();
   for (const item of chatLog) {
     ul.appendChild(createChatListItem(item));
   }
@@ -29,8 +35,8 @@ function appendChatList(chatLog) {
 function prependChatList() {
   let chatLog = JSON.parse(this.responseText);
   let ul = getUl();
-  for (const item of chatLog.slice().reverse()) {
-    ul.insertBefore(createChatListItem.apply(this, item), ul.firstChild);
+  for (const item of chatLog) {
+    ul.insertBefore(createChatListItem(item), ul.firstChild);
   }
 }
 
