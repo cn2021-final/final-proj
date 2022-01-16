@@ -1,6 +1,5 @@
 package web;
 
-import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -58,16 +57,6 @@ public class ConnectionHandler implements Runnable {
                 System.err.println("unrecognised request");
             }
             socket.close();
-
-            // TODO: this is an example of connection handling
-            //System.err.println("new connection");
-            //HybridInputStream input = new HybridInputStream(socket.getInputStream());
-            //PostRequest request = (PostRequest) HTTPRequest.parseRequest(input);
-            //ByteArrayOutputStream buffer =  new ByteArrayOutputStream();
-            //request.readData(buffer);
-            //System.err.println(request.getClass());
-            //new NotFoundResponse().WriteResponse(new DataOutputStream(socket.getOutputStream()));
-            //socket.close();
         }
         catch(IOException e) {
             System.err.println(e);

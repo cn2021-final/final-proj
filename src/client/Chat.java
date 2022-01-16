@@ -19,6 +19,7 @@ public class Chat {
     private final DataInputStream input;
     private final DataOutputStream output;
     private final Scanner userInput;
+    private long lastMessageOffset = 0;
     private static final String banner = "Here are some commands:\n"
     + "/i [filename] - image\n"
     + "/d [filename] - binary data\n"
@@ -107,8 +108,19 @@ public class Chat {
         file.close();
     }
 
-    private void history() {
+    private void history() throws IOException {
+        output.writeInt(ChatActions.GETHIST.code);
+        // System.err.println("last read offset: " + lastMessageOffset);
+        output.writeLong(lastMessageOffset);
+        output.writeInt(10);
+        lastMessageOffset = input.readLong();
+        int len = input.readInt();
+        receiveLogs(len);
+    }
 
+    private long getLastReadOffset() throws IOException {
+        output.writeInt(ChatActions.GETOFFSET.code);
+        return input.readLong();
     }
 
     private void text(String content) throws IOException {
@@ -120,6 +132,11 @@ public class Chat {
     private void getnew() throws IOException {
         output.writeInt(ChatActions.GETNEW.code);
         int len = input.readInt();
+        receiveLogs(len);
+        lastMessageOffset = getLastReadOffset();
+    }
+
+    private void receiveLogs(int len) throws IOException {
         for(int i = 0; i < len; ++i) {
             LogType type = LogType.translate(input.readInt());
             String user = input.readUTF();

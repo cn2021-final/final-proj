@@ -1,7 +1,6 @@
 package web.http;
 
 import java.io.IOException;
-import java.io.FileNotFoundException;
 import java.util.NoSuchElementException;
 
 import web.http.request.BadRequest;

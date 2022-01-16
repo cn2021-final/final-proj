@@ -10,8 +10,8 @@ import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
-import java.util.Stack;
 
+import common.chat.ChatHistory;
 import common.chat.ChatLog;
 import common.chat.LogType;
 
@@ -58,16 +58,28 @@ public class Chatroom {
         return logs;
     }
 
-    public Stack<ChatLog> getHistory(int skip, int count) {
-        Stack<ChatLog> logs = new Stack<>();
+    public ChatHistory getHistory(long offset, int count) {
+        ChatHistory history = new ChatHistory();
         FileLock lock = lockSession();
-        if(lock == null) return logs;
-        seekUntilRead(userLog);
+        if(lock == null) return history;
+        try {
+            while(offset != 0 && count-- >= 0) {
+                userLog.seek(offset);
+                offset = userLog.readLong();
+                history.offset = offset;
+                LogType type = LogType.translate(userLog.readInt());
+                String user = userLog.readUTF();
+                String content = userLog.readUTF();
+                history.add(new ChatLog(type, user, content));
+            }
 
-        // TODO
+        }
+        catch(IOException e) {
+            System.err.println(e);
+        }
 
         unlockSession(lock);
-        return logs;
+        return history;
     }
 
     public void sendText(String content) {
@@ -138,12 +150,14 @@ public class Chatroom {
         }
     }
 
-    private void seekUntilRead(RandomAccessFile file) {
+    private long seekUntilRead(RandomAccessFile file) {
         try {
             file.seek(0);
-            file.seek(file.readLong());
+            long offset = file.readLong();
+            file.seek(offset);
+            return offset;
         }
-        catch(IOException e) {}
+        catch(IOException e) { return 0; }
     }
 
     private void seekUntilEnd(RandomAccessFile file) {
@@ -198,5 +212,26 @@ public class Chatroom {
             }
         }
         catch(IOException e) { return null; }
+    }
+
+    public long getLastMessageOffset() {
+        FileLock lock = lockSession();
+        if(lock == null) return 0;
+
+        long offset;
+
+        try {
+            userLog.seek(0);
+            userLog.readLong(); // last read
+            offset = userLog.readLong();
+        }
+        catch(IOException e) {
+            System.err.println(e);
+            offset = 0;
+        }
+        
+
+        unlockSession(lock);
+        return offset;
     }
 }

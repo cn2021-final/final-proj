@@ -3,7 +3,7 @@ package common.actions;
 import java.util.TreeMap;
 
 public enum ChatActions {
-    TEXT(1), IMAGE(2), BINARY(3), GETDATA(4), GETHIST(5), GETNEW(6), EXIT(7);
+    TEXT(1), IMAGE(2), BINARY(3), GETDATA(4), GETHIST(5), GETNEW(6), EXIT(7), GETOFFSET(8);
 
     public final int code;
     private static final TreeMap<Integer, ChatActions> reverseLookup = initialiseMap();

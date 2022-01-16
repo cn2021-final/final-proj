@@ -8,6 +8,7 @@ import java.io.RandomAccessFile;
 import java.util.Queue;
 
 import common.actions.ChatActions;
+import common.chat.ChatHistory;
 import common.chat.ChatLog;
 
 public class Chat {
@@ -38,12 +39,16 @@ public class Chat {
                 getData();
                 break;
                 case GETHIST:
+                getHistory();
                 break;
                 case GETNEW:
                 getnew();
                 break;
                 case EXIT:
                 return;
+                case GETOFFSET:
+                getLastMessageOffset();
+                break;
             }
         }
     }
@@ -107,5 +112,28 @@ public class Chat {
         }
         file.close();
         return f.getName();
+    }
+
+    private void getHistory() throws IOException {
+        // input: offset, count
+        // output: offset, count, stuff
+        long offset = input.readLong();
+        int count = input.readInt();
+        ChatHistory history = chatroom.getHistory(offset, count);
+        output.writeLong(history.offset);
+        int sz = history.size();
+        output.writeInt(sz);
+        for(int i = 0; i < sz; ++i) {
+            ChatLog log = history.get();
+            output.writeInt(log.type.code);
+            output.writeUTF(log.user);
+            output.writeUTF(log.content);
+        }
+    }
+
+    private void getLastMessageOffset() throws IOException {
+        // input: nothing
+        // output: offset of last read
+        output.writeLong(chatroom.getLastMessageOffset());
     }
 }
