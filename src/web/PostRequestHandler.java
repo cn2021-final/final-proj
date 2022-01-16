@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 
 import client.ClientLib;
+import common.chat.ChatHistory;
 import common.chat.ChatLog;
 import web.http.request.PostRequest;
 import web.http.response.BadResponse;
@@ -41,6 +42,9 @@ public class PostRequestHandler {
                 return;
             case "/get-file":
                 getFile(request, output);
+                return;
+            case "/more-history":
+                moreHistory(request, output);
                 return;
         }
         if (request.location.startsWith("/send-file")) {
@@ -235,5 +239,38 @@ public class PostRequestHandler {
         }
 
         new GeneralGoodResponse().WriteResponse(output);
+    }
+
+    private static void moreHistory(PostRequest request, DataOutputStream output) throws IOException {
+        ByteArrayOutputStream input = new ByteArrayOutputStream();
+        request.readData(input);
+        try {
+            JSONObject obj = new JSONObject(input.toString());
+            String sender = obj.getString("sender");
+            String receiver = obj.getString("receiver");
+            long offset = obj.getLong("offset");
+            int count = obj.getInt("count");
+            ChatHistory history = ClientLib.getChatHistory(sender, receiver, offset, count);
+            obj = new JSONObject();
+            obj.put("offset", history.offset);
+            JSONArray arr = new JSONArray();
+            count = history.size();
+            for(int i = 0; i < count; ++i) {
+                ChatLog log = history.get();
+                JSONArray line = new JSONArray();
+                line.put(log.type.code);
+                line.put(log.user);
+                line.put(log.content);
+                arr.put(line);
+            }
+            obj.put("history", arr);
+            new JSONResponse(obj.toString()).WriteResponse(output);
+        }
+        catch(JSONException | IOException e) {
+            System.err.println(e);
+            new BadResponse().WriteResponse(output);
+            return;
+        }
+
     }
 }
