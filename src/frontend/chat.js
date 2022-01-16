@@ -36,7 +36,6 @@ function appendChatList(chatLog) {
   let ul = getUl();
   chatLog.reverse();
   
-  // Send post requests to tell Web Server to retrieve the file
   // from Main Server.
   const requests = chatLog.map(function (item) { 
     const sender = item[1];
@@ -55,10 +54,10 @@ function appendChatList(chatLog) {
     .then((responses) => chatLog.forEach((item) => ul.appendChild(createChatListItem(item))));
 }
 
-function prependChatList() {
-  let chatLog = JSON.parse(this.responseText);
+function prependChatList(obj) {
+  let chatLog = obj.history;
+  offset = obj.offset;
   let ul = getUl();
-  // Send post requests to tell Web Server to retrieve the file
   // from Main Server.
   const requests = chatLog.map(function (item) { 
     const sender = item[1];
@@ -98,6 +97,19 @@ function setTitle(partner) {
 }
 
 function loadMore() {
+  fetch("/more-history",{
+    method: "POST",
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      sender: getUsername(),
+      receiver: getPartner(),
+      offset: offset,
+      count: 5
+    })
+  })
+  .then((response) => response.json())
+  .then(prependChatList)
+  .catch((reason) => console.log(reason));
 }
 
 function refresh() {
@@ -140,6 +152,7 @@ function sendFile(isImage=false) {
 }
 
 function repeatedlyUpdates() {
+  refresh();
   for (const path of unfetchedImages) {
     let img = document.querySelector(`img[src="${path}"]`);
     const li = img.parentElement;
@@ -159,11 +172,12 @@ const ul = document.createElement('ul');
 ul.id = 'chat-list';
 document.body.insertBefore(ul, document.getElementById('before-chat'));
 
+// The offset for loading more history
+let offset = -1;
 // The images that has to be reloaded at each interval.
 const unfetchedImages = new Set();
-const refetchInterval = 2000; // Time to refetch in ms
+const refetchInterval = 10000; // Time to refetch in ms
 
-refresh();
 document.getElementById('lobby').onclick = lobby;
 document.getElementById('load-more').onclick = loadMore;
 document.getElementById('refresh').onclick = refresh;
