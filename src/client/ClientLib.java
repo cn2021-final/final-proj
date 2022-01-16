@@ -53,7 +53,7 @@ public class ClientLib {
         else
             System.err.println(username + " login");
         lib.afterOperation();
-        for(String friend : listFriends(username)) new File(libDir, friend).mkdir();
+        for(String friend : listFriends(username)) createDirectories(username, friend); 
     }
 
     public static String[] listFriends(String username) throws IOException {
@@ -219,7 +219,9 @@ public class ClientLib {
     private static void createDirectories(String user, String friend) {
         // Should be called with existing friend
         File userDir = new File(libDir, user);
+        userDir.mkdir();
         File friendDir = new File(libDir, friend);
+        friendDir.mkdir();
         new File(userDir, friend).mkdir();
         new File(friendDir, user).mkdir();
     }

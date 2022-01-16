@@ -499,16 +499,20 @@ quit
 
 - load unloaded history right before the first loaded history
 
-- should send a get request indicating the current user and the chatting friend
+- Should send a get request indicating the current user, the chatting friend, the offset, and the number of logs to request
 
-- parse the response to get the chat history, or error message if the chatting partner is not a friend
+- parse the response to get the chat history  and save the offset (offset is initially -1)
+
+- response: `{"offset": "<offset>", "history": [<chat history>]}`
 
 - request: `./more-history`
 
 - ```json
   {
       "sender": "<sender username>",
-      "receiver": "<receiver username>"
+      "receiver": "<receiver username>",
+      "offset": "<offset>",
+      "count": "<count>"
   }
   ```
 

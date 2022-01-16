@@ -81,5 +81,8 @@ function del(partner) {
 }
 
 renew();
+const updateInterval = 10000;
 document.getElementById('renew').onclick = renew;
 document.getElementById('send-added-username').onclick = add();
+
+setInterval(renew, updateInterval);
