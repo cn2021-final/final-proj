@@ -31,6 +31,7 @@ public class UserManager {
         File userDir = new File(rootDir, username);
         File userFriend = new File(userDir, friend);
         if(userFriend.exists()) return FriendStatus.ISFRIEND;
+        if(username.equals(friend)) return FriendStatus.YOURSELF;
         friendInit(userFriend);
         friendInit(new File(friendDir, username));
         return FriendStatus.NOTFRIEND;

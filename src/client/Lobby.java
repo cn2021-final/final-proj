@@ -75,6 +75,9 @@ public class Lobby {
             break;
             case NOTEXIST:
             System.out.format("User %s doesn't exist.\n", friend);
+            break;
+            case YOURSELF:
+            System.out.println("You can't add yourself as a friend");
         }
     }
 
@@ -90,6 +93,9 @@ public class Lobby {
             break;
             case NOTEXIST:
             System.out.format("User %s doesn't exist.\n", friend);
+            break;
+            case YOURSELF:
+            System.out.println("You can't delete yourself from the friend list");
         }
     }
 }

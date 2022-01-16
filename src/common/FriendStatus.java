@@ -3,8 +3,7 @@ package common;
 import java.util.TreeMap;
 
 public enum FriendStatus {
-    NOTFRIEND(1), ISFRIEND(2), NOTEXIST(3);
-    // JUSTERR: just an error, I don't want to talk more
+    NOTFRIEND(1), ISFRIEND(2), NOTEXIST(3), YOURSELF(4);
 
     public final int code;
     private static final TreeMap<Integer, FriendStatus> reverseLookup = initialiseMap();
