@@ -13,6 +13,9 @@ function createChatListItem(item) {
     if (item[0] == 2) { // image
       const img = document.createElement('img');
       img.src = path;
+      img.onerror = function () {
+        unfetchedImages.add(path);
+      }
       li.appendChild(img);
     } else { // binary
       const a = document.createElement('a');
@@ -136,10 +139,30 @@ function sendFile(isImage=false) {
   }
 }
 
+function repeatedlyUpdates() {
+  for (const path of unfetchedImages) {
+    let img = document.querySelector(`img[src="${path}"]`);
+    const li = img.parentElement;
+    li.removeChild(img);
+    img = document.createElement('img');
+    img.src = path;
+    img.onerror = function () {
+      unfetchedImages.add(path);
+    }
+    li.appendChild(img);
+    unfetchedImages.delete(path);
+  }
+}
+
 setTitle(getPartner());
 const ul = document.createElement('ul');
 ul.id = 'chat-list';
 document.body.insertBefore(ul, document.getElementById('before-chat'));
+
+// The images that has to be reloaded at each interval.
+const unfetchedImages = new Set();
+const refetchInterval = 2000; // Time to refetch in ms
+
 refresh();
 document.getElementById('lobby').onclick = lobby;
 document.getElementById('load-more').onclick = loadMore;
@@ -147,3 +170,5 @@ document.getElementById('refresh').onclick = refresh;
 document.getElementById('send-text').onclick = sendText;
 document.getElementById('send-image').onclick = sendFile(true);
 document.getElementById('send-file').onclick = sendFile(false);
+
+setInterval(repeatedlyUpdates, refetchInterval);
