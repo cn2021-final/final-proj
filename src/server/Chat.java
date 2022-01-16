@@ -60,11 +60,14 @@ public class Chat {
 
     private void getnew() throws IOException {
         Queue<ChatLog> logs = chatroom.getUnread();
-        output.writeInt(logs.size());
-        for(ChatLog log : logs) {
+        int sz = logs.size();
+        output.writeInt(sz);
+        for(int i = 0; i < sz; ++i) {
+            ChatLog log = logs.remove();
             output.writeInt(log.type.code);
             output.writeUTF(log.user);
             output.writeUTF(log.content);
+            System.err.println(log.content);
         }
     }
 

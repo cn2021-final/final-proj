@@ -46,7 +46,7 @@ public class Chatroom {
                 LogType type =  LogType.translate(userLog.readInt());
                 String user = userLog.readUTF();
                 String content = userLog.readUTF();
-                logs.push(new ChatLog(type, user, content));
+                logs.add(new ChatLog(type, user, content));
             }
             catch(IOException e) {
                 break;
