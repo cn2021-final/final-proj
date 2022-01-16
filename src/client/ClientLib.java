@@ -238,11 +238,4 @@ public class ClientLib {
         for (String content : dir.list()) new File(dir, content).delete();
         dir.delete();
     }
-
-    private static File generateFile() {
-        try {
-            return File.createTempFile("download", null, libDir);
-        }
-        catch(IOException e) { return null; }
-    }
 }
