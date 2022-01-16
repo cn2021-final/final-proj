@@ -20,7 +20,7 @@ function createChatListItem(item) {
     } else { // binary
       const a = document.createElement('a');
       a.href = path;
-      a.download = true;
+      a.download = item[2];
       a.appendChild(createText(item[2]));
       li.appendChild(a);
     }
@@ -34,7 +34,6 @@ function getReceiver(sender) {
 
 function appendChatList(chatLog) {
   let ul = getUl();
-  chatLog.reverse();
   
   // from Main Server.
   const requests = chatLog.map(function (item) { 
