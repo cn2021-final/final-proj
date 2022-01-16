@@ -170,11 +170,23 @@ public class ClientLib {
             String content = lib.input.readUTF();
             history.add(new ChatLog(type, from, content));
         }
+        lib.afterOperation();
         return history;
     }
 
     public static String getDataPath(String path) {
         return new File(libDir, path).toString();
+    }
+
+    public static long getLastReadOffset(String user, String friend) throws IOException {
+        ClientLib lib = new ClientLib(user);
+        lib.enterChat(friend);
+
+        lib.output.writeInt(ChatActions.GETOFFSET.code);
+        long offset = lib.input.readLong();
+
+        lib.afterOperation();
+        return offset;
     }
 
     private void sendData(String filename) throws IOException {
