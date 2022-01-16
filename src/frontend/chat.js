@@ -73,7 +73,7 @@ function prependChatList(obj) {
     })
   });
   Promise.allSettled(requests)
-    .then((responses) => chatLog.forEach((item) => ul.appendChild(createChatListItem(item))));
+    .then((responses) => chatLog.forEach((item) => ul.insertBefore(createChatListItem(item), ul.firstChild)));
 }
 
 function getUl() {
