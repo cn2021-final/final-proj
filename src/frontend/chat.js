@@ -86,8 +86,7 @@ function sendText() {
       receiver: getPartner(),
       content: getSendedText()
     })
-  });
-  // TODO: update chat history accordingly
+  }).then(() => refresh());
 }
 
 function sendFile(isImage=false) {
@@ -99,8 +98,7 @@ function sendFile(isImage=false) {
     fetch((isImage ? "/send-image" : "/send-file") + `/${username}/${partner}/${filename}`,{
       method: "POST",
       headers: {'Content-Type': (isImage ? 'image/png' : 'application/octet-stream')},
-      body: fileField});
-    // TODO: update chat history accordingly
+      body: fileField}).then(() => refresh());
   }
 }
 
@@ -108,7 +106,7 @@ setTitle(getPartner());
 const ul = document.createElement('ul');
 ul.id = 'chat-list';
 document.body.insertBefore(ul, document.getElementById('before-chat'));
-// TODO: load initial chat history
+refresh();
 document.getElementById('lobby').onclick = lobby;
 document.getElementById('load-more').onclick = loadMore;
 document.getElementById('refresh').onclick = refresh;
