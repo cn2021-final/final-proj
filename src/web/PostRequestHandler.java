@@ -46,6 +46,9 @@ public class PostRequestHandler {
             case "/more-history":
                 moreHistory(request, output);
                 return;
+            case "/get-offset":
+                getOffset(request, output);
+                return;
         }
         if (request.location.startsWith("/send-file")) {
             sendFile(request, output);
@@ -271,6 +274,24 @@ public class PostRequestHandler {
             new BadResponse().WriteResponse(output);
             return;
         }
+    }
 
+    private static void getOffset(PostRequest request, DataOutputStream output) throws IOException {
+        ByteArrayOutputStream input = new ByteArrayOutputStream();
+        request.readData(input);
+        try {
+            JSONObject obj = new JSONObject(input.toString());
+            String sender = obj.getString("sender");
+            String receiver = obj.getString("receiver");
+            long offset = ClientLib.getLastReadOffset(sender, receiver);
+            obj = new JSONObject();
+            obj.put("offset", offset);
+            new JSONResponse(obj.toString()).WriteResponse(output);
+        }
+        catch(JSONException | IOException e) {
+            System.err.println(e);
+            new BadResponse().WriteResponse(output);
+            return;
+        }
     }
 }
