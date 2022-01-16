@@ -115,14 +115,15 @@ public class ClientLib {
         lib.enterChat(friend);
         lib.output.writeInt(ChatActions.GETNEW.code);
         int len = lib.input.readInt();
+        System.err.println("get len: " + len);
         ChatLog[] logs = new ChatLog[len];
         for(int i = 0; i < len; ++i) {
             LogType type = LogType.translate(lib.input.readInt());
-            System.err.println(type);
+            System.err.println("got type: " + type);
             String from = lib.input.readUTF();
-            System.err.println(from);
+            System.err.println("got from: " + from);
             String content = lib.input.readUTF();
-            System.err.println(content);
+            System.err.println("got content: " + content);
             logs[i] = new ChatLog(type, from, content);
         }
         lib.afterOperation();
@@ -183,6 +184,7 @@ public class ClientLib {
     private void enterChat(String friend) throws IOException {
         output.writeInt(LobbyActions.CHAT.code);
         output.writeUTF(friend);
+        input.readInt();
     }
 
     private static String getSuffix(String filename) {
