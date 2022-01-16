@@ -133,7 +133,15 @@ public class PostRequestHandler {
             String sender = obj.getString("sender");
             String receiver = obj.getString("receiver");
             ChatLog [] logs = ClientLib.getnew(sender, receiver);
-            new JSONResponse(new JSONArray(logs).toString()).WriteResponse(output);
+            JSONArray jsonLogArr = new JSONArray();
+            for(ChatLog log : logs) {
+                JSONArray jsonLog = new JSONArray();
+                jsonLog.put(log.type.code);
+                jsonLog.put(log.user);
+                jsonLog.put(log.content);
+                jsonLogArr.put(jsonLog);
+            }
+            new JSONResponse(jsonLogArr.toString()).WriteResponse(output);
         } catch(JSONException | IOException e) {
             System.err.println(e);
             new BadResponse().WriteResponse(output);

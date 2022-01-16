@@ -119,11 +119,8 @@ public class ClientLib {
         ChatLog[] logs = new ChatLog[len];
         for(int i = 0; i < len; ++i) {
             LogType type = LogType.translate(lib.input.readInt());
-            System.err.println("got type: " + type);
             String from = lib.input.readUTF();
-            System.err.println("got from: " + from);
             String content = lib.input.readUTF();
-            System.err.println("got content: " + content);
             logs[i] = new ChatLog(type, from, content);
         }
         lib.afterOperation();
