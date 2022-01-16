@@ -1,2 +1,3 @@
 #!/bin/sh
-java -cp bin Client $@
+BASEDIR=$(dirname "$0")
+java -cp "$BASEDIR"/bin Client $@

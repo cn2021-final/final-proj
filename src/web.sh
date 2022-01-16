@@ -1,2 +1,3 @@
 #!/bin/sh
-java -cp bin:lib/json-java.jar WebServer $@
+BASEDIR=$(dirname "$0")
+java -cp "$BASEDIR"/bin:"BASEDIR"/lib/json-java.jar WebServer $@
