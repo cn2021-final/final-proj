@@ -7,8 +7,9 @@ function createChatListItem(item) {
     li.appendChild(createText(item[2]));
   } else {
     const sender = item[1];
-    const receiver = (sender != getUsername()) ? getUsername() : getPartner();
+    const receiver = getReceiver(sender);
     const path = `./${sender}/${receiver}/${item[2]}`;
+
     if (item[0] == 2) { // image
       const img = document.createElement('img');
       img.src = path;
@@ -24,20 +25,53 @@ function createChatListItem(item) {
   return li;
 }
 
+function getReceiver(sender) {
+  return (sender != getUsername()) ? getUsername() : getPartner();
+}
+
 function appendChatList(chatLog) {
   let ul = getUl();
   chatLog.reverse();
-  for (const item of chatLog) {
-    ul.appendChild(createChatListItem(item));
-  }
+  
+  // Send post requests to tell Web Server to retrieve the file
+  // from Main Server.
+  const requests = chatLog.map(function (item) { 
+    const sender = item[1];
+    const receiver = getReceiver(sender);
+    fetch("/get-file",{
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        sender: sender,
+        receiver: receiver,
+        filename: item[2]
+      })
+    })
+  });
+  Promise.allSettled(requests)
+    .then((responses) => chatLog.forEach((item) => ul.appendChild(createChatListItem(item))));
 }
 
 function prependChatList() {
   let chatLog = JSON.parse(this.responseText);
   let ul = getUl();
-  for (const item of chatLog) {
-    ul.insertBefore(createChatListItem(item), ul.firstChild);
-  }
+  // Send post requests to tell Web Server to retrieve the file
+  // from Main Server.
+  const requests = chatLog.map(function (item) { 
+    const sender = item[1];
+    const receiver = getReceiver(sender);
+    fetch("/get-file",{
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        sender: sender,
+        receiver: receiver,
+        filename: item[2]
+      })
+    })
+  });
+  Promise.allSettled(requests)
+    .then((responses) => chatLog.forEach((item) => ul.appendChild(createChatListItem(item))));
 }
 
 function getUl() {
