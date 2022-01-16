@@ -17,8 +17,10 @@ import java.util.stream.Collectors;
 import common.FriendStatus;
 import common.actions.ChatActions;
 import common.actions.LobbyActions;
+import common.chat.ChatHistory;
 import common.chat.ChatLog;
 import common.chat.LogType;
+import server.Chatroom;
 
 public class ClientLib {
     private static String addr;
@@ -151,6 +153,24 @@ public class ClientLib {
     public static FileOutputStream streamFromClient(String user, String friend, String filename) throws FileNotFoundException {
         File path = new File(libDir, user + "/" + friend + "/" + filename);
         return new FileOutputStream(path);
+    }
+
+    public static ChatHistory getChatHistory(String user, String friend, long offset, int count) throws IOException {
+        ClientLib lib = new ClientLib(user);
+        lib.enterChat(friend);
+        lib.output.writeInt(ChatActions.GETHIST.code);
+        lib.output.writeLong(offset);
+        lib.output.writeInt(count);
+        ChatHistory history = new ChatHistory();
+        history.offset = lib.input.readLong();
+        int sz = lib.input.readInt();
+        for(int i = 0; i < sz; ++i) {
+            LogType type = LogType.translate(lib.input.readInt());
+            String from = lib.input.readUTF();
+            String content = lib.input.readUTF();
+            history.add(new ChatLog(type, from, content));
+        }
+        return history;
     }
 
     private void sendData(String filename) throws IOException {

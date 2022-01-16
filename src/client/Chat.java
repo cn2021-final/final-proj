@@ -110,7 +110,6 @@ public class Chat {
 
     private void history() throws IOException {
         output.writeInt(ChatActions.GETHIST.code);
-        // System.err.println("last read offset: " + lastMessageOffset);
         output.writeLong(lastMessageOffset);
         output.writeInt(10);
         lastMessageOffset = input.readLong();
