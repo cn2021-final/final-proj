@@ -17,7 +17,7 @@ import web.http.response.HTMLResponse;
 import web.http.response.FileResponse;
 import web.http.response.ScriptResponse;
 import web.http.response.NotFoundResponse;
-
+import web.http.response.RedirectResponse;
 import client.ClientLib;
 
 public class ConnectionHandler implements Runnable {
@@ -68,10 +68,14 @@ public class ConnectionHandler implements Runnable {
 
     private void handle_get(GetRequest request) throws IOException {
         try {
+            if(request.location.equals("/")) {
+                DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
+                new RedirectResponse("/login.html").WriteResponse(outputStream);
+                return;
+            }
             if (!locations.contains(request.location)) {
                 DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
                 new FileResponse(ClientLib.getDataPath(request.location)).WriteResponse(outputStream);
-                outputStream.close();
                 return;
             }
             String extension = request.location.split("\\.")[1];

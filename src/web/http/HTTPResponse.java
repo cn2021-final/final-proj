@@ -31,7 +31,7 @@ public class HTTPResponse {
         }
     }
 
-    private String generateHeader() throws IOException {
+    protected String generateHeader() throws IOException {
         return "HTTP/1.1 " + type.code + " " + type.meaning + "\r\n"
         + "content-length: " + contentLength + "\r\n"
         + "Content-Type: " + contentType.meaning + "\r\n"
